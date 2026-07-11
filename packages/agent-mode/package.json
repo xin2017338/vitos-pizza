@@ -1,6 +1,6 @@
 {
 	"name": "@vitos-pizza/agent-mode",
-	"version": "0.1.0",
+	"version": "0.2.0",
 	"description": "Centralized agent / plan / execute mode switching for Vito's Pizzeria",
 	"type": "module",
 	"license": "MIT",

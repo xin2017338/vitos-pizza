@@ -2,6 +2,24 @@
 
 All notable changes to vitos-pizza are documented here.
 
+## [0.2.0] - 2026-07-11
+
+### Added
+
+- **`@vitos-pizza/todoist`** — in-memory task list with TUI widget, `/todo` command, and LLM tools (`todo_add` / `todo_update` / `todo_complete` / `todo_delete`)
+- Terminal **resize recovery** in ui-enhancements — debounce + full redraw after resize (fixes blank/corrupt TUI on Windows)
+- Plan-mode **Next** footer guidance and optional scout (skip recon when context is enough; parallel scouts for independent areas)
+
+### Changed
+
+- Permission system: tool activation starts from **all registered tools** (`getAllTools`) so leaving plan mode restores write/edit/bash
+- Plan instructions: require `question` for mutually exclusive choices; clarify scout → planner delegation paths
+- Question UI: width cache / render fixes for more stable TUI layout
+
+### Fixed
+
+- Permission gate / evaluator edge cases covered by new tests (`before-agent-start`, gates, evaluator)
+
 ## [0.1.0] - 2026-07-10
 
 ### Added

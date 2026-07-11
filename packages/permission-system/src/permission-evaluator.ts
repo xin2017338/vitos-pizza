@@ -22,6 +22,19 @@ export interface SessionApprovalRule {
 	pattern: string;
 }
 
+/**
+ * Pattern to store for a session approval.
+ * Scalar surface rules use `matchedPattern === surface`; store `*` so the
+ * whole surface stays allowed for the rest of the session (e.g. web_read,
+ * external_directory), not only an exact string equal to the surface name.
+ */
+export function patternForSessionApproval(
+	surface: string,
+	matchedPattern: string,
+): string {
+	return matchedPattern === surface ? "*" : matchedPattern;
+}
+
 export class SessionApprovals {
 	private readonly rules: SessionApprovalRule[] = [];
 
@@ -195,9 +208,13 @@ export class PermissionEvaluator {
 	): PermissionState {
 		const toolRule = permission[toolName];
 		if (isPermissionState(toolRule)) {
-			const state = toolRule;
-			if (options.yoloMode && state === "ask") return "allow";
-			return state;
+			return this.evaluateSurface(
+				permission,
+				toolName,
+				toolName,
+				"project",
+				options,
+			).state;
 		}
 		return this.evaluateSurface(permission, "*", toolName, "project", options)
 			.state;

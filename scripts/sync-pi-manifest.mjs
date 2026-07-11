@@ -10,7 +10,7 @@ const RESOURCE_TYPES = ["extensions", "skills", "prompts", "themes"];
 
 const BUNDLED_FIRST = [];
 const BUNDLED_LAST = [];
-const LOCAL_ORDER = ["permission-system", "question", "ui-enhancements", "agent-mode", "subagents", "websearch", "session-title", "keybindings"];
+const LOCAL_ORDER = ["permission-system", "question", "ui-enhancements", "agent-mode", "subagents", "websearch", "session-title", "todoist", "keybindings"];
 
 function loadJson(path) {
 	return JSON.parse(readFileSync(path, "utf8"));

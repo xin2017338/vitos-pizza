@@ -25,10 +25,10 @@ npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 
 ```bash
 # npm (recommended)
-pi install npm:@vitos-pizza/vitos-pizza@0.1.0
+pi install npm:@vitos-pizza/vitos-pizza@0.2.0
 
 # git (pinned tag)
-pi install git:github.com/xin2017338/vitos-pizza@v0.1.0
+pi install git:github.com/xin2017338/vitos-pizza@v0.2.0
 ```
 
 From source:
@@ -68,6 +68,7 @@ vitos-pizza/                 # Pi distribution (install this)
     ├── session-title/       # @vitos-pizza/session-title — auto session naming
     ├── subagents/           # @vitos-pizza/subagents — scout/planner/worker delegation
     ├── websearch/           # @vitos-pizza/websearch — web_search / web_read tools
+    ├── todoist/             # @vitos-pizza/todoist — in-memory task list + TUI widget
     └── keybindings/         # @vitos-pizza/keybindings — centralized shortcut bindings
 ```
 
@@ -215,6 +216,8 @@ vitos-pizza builds on the Pi ecosystem and several open-source projects. We are 
 | [Pi `border-status-editor` example](https://github.com/earendil-works/pi/tree/main/packages/coding-agent/examples/extensions/border-status-editor.ts) | `@vitos-pizza/ui-enhancements` | Editor-border status bar (model, thinking, context, cwd, git) |
 | [sf-welcome](https://github.com/salesforce/sf-pi/blob/main/extensions/sf-welcome/index.ts) | `@vitos-pizza/ui-enhancements` | Welcome header session lifecycle and tips layout |
 | **Claude Code** permission UX | Agent modes (`agent` / `plan` / `execute`) | Preset naming and mode-switching inspiration (not a code dependency) |
+| [Claude Code TodoWrite / Task tools](https://code.claude.com/docs/en/agent-sdk/todo-tracking.md) | `@vitos-pizza/todoist` | Complete = status done; delete only when no longer relevant (cancelled / mistaken) |
+| [@capyup/pi-basic-tools todo](https://www.npmjs.com/package/@capyup/pi-basic-tools) | `@vitos-pizza/todoist` | completed vs deleted prompt boundary for task-list tools |
 | [pi-package-template](https://github.com/S1M0N38/pi-package-template) | Repo layout | Pi package monorepo conventions |
 
 ### Runtime & tooling libraries

@@ -1,17 +1,14 @@
 {
-	"name": "@vitos-pizza/session-title",
+	"name": "@vitos-pizza/todoist",
 	"version": "0.2.0",
-	"description": "Async session auto-naming for Vito's Pizzeria Pi distribution",
+	"description": "In-memory task management with TUI widget and optional Todoist MCP sync for Vito's Pizzeria Pi distribution",
 	"type": "module",
 	"license": "MIT",
 	"private": true,
 	"pi": {
 		"requires": [
-			"@vitos-pizza/subagents"
+			"@vitos-pizza/agent-mode"
 		]
-	},
-	"dependencies": {
-		"@vitos-pizza/subagents": "*"
 	},
 	"scripts": {
 		"test": "vitest run",
@@ -30,7 +27,7 @@
 	"devDependencies": {
 		"@earendil-works/pi-ai": "*",
 		"@earendil-works/pi-coding-agent": "*",
-		"@vitos-pizza/subagents": "*",
+		"@earendil-works/pi-tui": "*",
 		"typebox": "*",
 		"vitest": "^3.2.4"
 	}

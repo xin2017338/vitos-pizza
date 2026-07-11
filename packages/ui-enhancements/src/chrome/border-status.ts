@@ -8,12 +8,13 @@ import type { Component, EditorTheme, TUI } from "@earendil-works/pi-tui";
 import type { UiEnhancementsSettings } from "../config.ts";
 import { loadUiEnhancementsSettings } from "../config.ts";
 import { shortenPath } from "../utils/shorten-path.ts";
-import { fitBorder } from "./format-border.ts";
 import {
 	formatAgentModeSuffix,
 	getAgentModeBadge,
 	registerAgentModeBadge,
 } from "./agent-mode-badge.ts";
+import { fitBorder } from "./format-border.ts";
+import { attachResizeRecovery } from "./resize-recovery.ts";
 
 type GetSettings = () => UiEnhancementsSettings;
 
@@ -46,6 +47,7 @@ export function registerBorderStatusBar(
 	let spinnerIndex = 0;
 	let spinnerTimer: ReturnType<typeof setInterval> | undefined;
 	let activeTui: TUI | undefined;
+	let detachResizeRecovery: (() => void) | undefined;
 	const spinnerFrames = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
 
 	const stopSpinner = () => {
@@ -53,6 +55,11 @@ export function registerBorderStatusBar(
 			clearInterval(spinnerTimer);
 			spinnerTimer = undefined;
 		}
+	};
+
+	const stopResizeRecovery = () => {
+		detachResizeRecovery?.();
+		detachResizeRecovery = undefined;
 	};
 
 	pi.on("agent_start", () => {
@@ -73,6 +80,7 @@ export function registerBorderStatusBar(
 
 	pi.on("session_shutdown", () => {
 		stopSpinner();
+		stopResizeRecovery();
 		activeTui = undefined;
 	});
 
@@ -83,6 +91,11 @@ export function registerBorderStatusBar(
 	pi.on("session_start", async (_event, ctx) => {
 		const settings = loadUiEnhancementsSettings(ctx.cwd);
 		if (!settings.borderStatusBar || !ctx.hasUI || ctx.mode !== "tui") return;
+
+		stopResizeRecovery();
+		detachResizeRecovery = attachResizeRecovery({
+			getTarget: () => activeTui,
+		});
 
 		ctx.ui.setWorkingVisible(false);
 		ctx.ui.setFooter(() => new EmptyFooter());

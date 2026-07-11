@@ -26,6 +26,7 @@ export async function runQuestionUi(
 	return ui.custom<QuestionUiResult | null>((tui, theme, _kb, done) => {
 		let optionIndex = 0;
 		let cachedLines: string[] | undefined;
+		let cachedWidth: number | undefined;
 		const customInput = new Input();
 
 		customInput.onSubmit = (value) => {
@@ -41,6 +42,7 @@ export async function runQuestionUi(
 
 		function refresh() {
 			cachedLines = undefined;
+			cachedWidth = undefined;
 			tui.requestRender();
 		}
 
@@ -161,7 +163,7 @@ export async function runQuestionUi(
 		}
 
 		function render(width: number): string[] {
-			if (cachedLines) return cachedLines;
+			if (cachedLines && cachedWidth === width) return cachedLines;
 
 			const lines: string[] = [];
 			const renderWidth = Math.max(1, width);
@@ -224,6 +226,7 @@ export async function runQuestionUi(
 			lines.push(theme.fg("accent", "─".repeat(renderWidth)));
 
 			cachedLines = lines;
+			cachedWidth = width;
 			return lines;
 		}
 
@@ -231,6 +234,7 @@ export async function runQuestionUi(
 			render,
 			invalidate: () => {
 				cachedLines = undefined;
+				cachedWidth = undefined;
 			},
 			handleInput,
 		};

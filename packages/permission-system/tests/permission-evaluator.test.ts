@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { PermissionEvaluator } from "../src/permission-evaluator.ts";
-import { SessionApprovals } from "../src/session-approvals.ts";
+import {
+	patternForSessionApproval,
+	SessionApprovals,
+} from "../src/session-approvals.ts";
 
 describe("permission-evaluator", () => {
 	const evaluator = new PermissionEvaluator();
@@ -11,6 +14,7 @@ describe("permission-evaluator", () => {
 			"git status": "allow" as const,
 			"rm -rf *": "deny" as const,
 		},
+		web_read: "ask" as const,
 	};
 
 	it("evaluates bash patterns with last-match-wins", () => {
@@ -51,5 +55,28 @@ describe("permission-evaluator", () => {
 		);
 		expect(result.state).toBe("allow");
 		expect(result.origin).toBe("session");
+	});
+
+	it("getToolPermission honors session approvals for scalar tools", () => {
+		const approvals = new SessionApprovals();
+		const asked = evaluator.getToolPermission(permission, "web_read");
+		expect(asked).toBe("ask");
+
+		approvals.add(
+			"web_read",
+			patternForSessionApproval("web_read", "web_read"),
+		);
+		const allowed = evaluator.getToolPermission(permission, "web_read", {
+			sessionApprovals: approvals,
+		});
+		expect(allowed).toBe("allow");
+	});
+
+	it("patternForSessionApproval widens scalar surface matches to *", () => {
+		expect(patternForSessionApproval("web_read", "web_read")).toBe("*");
+		expect(patternForSessionApproval("bash", "*")).toBe("*");
+		expect(patternForSessionApproval("bash", "npm install")).toBe(
+			"npm install",
+		);
 	});
 });

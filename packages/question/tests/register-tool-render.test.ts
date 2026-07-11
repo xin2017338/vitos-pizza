@@ -1,7 +1,10 @@
-import { describe, expect, it } from "vitest";
 import { Text } from "@earendil-works/pi-tui";
+import { describe, expect, it } from "vitest";
 
-function renderCall(theme: { fg: (c: string, t: string) => string; bold: (t: string) => string }) {
+function renderCall(theme: {
+	fg: (c: string, t: string) => string;
+	bold: (t: string) => string;
+}) {
 	return new Text(theme.fg("toolTitle", theme.bold("question")), 0, 0);
 }
 

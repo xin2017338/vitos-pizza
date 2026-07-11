@@ -8,10 +8,7 @@ import { Type } from "typebox";
 import { forwardQuestionPrompt } from "./forwarding/forwarder.ts";
 import { isSubagentChild, resolveParentSessionId } from "./parent-session.ts";
 import { runQuestionUi } from "./question-ui.ts";
-import type {
-	QuestionDetails,
-	QuestionParams,
-} from "./types.ts";
+import type { QuestionDetails, QuestionParams } from "./types.ts";
 
 const OptionSchema = Type.Object({
 	label: Type.String({ description: "Display label for the option" }),

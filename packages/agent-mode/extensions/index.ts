@@ -26,6 +26,7 @@ import {
 } from "../src/modes.ts";
 import {
 	PLAN_INSTRUCTIONS,
+	PLAN_MODE_ENDED_MESSAGE,
 	PLAN_MODE_MESSAGE,
 	PLAN_MODE_TOOLS,
 } from "../src/plan-instructions.ts";
@@ -35,6 +36,8 @@ export default function (pi: ExtensionAPI): void {
 
 	const emitReload = createReloadEmitter(pi.events);
 
+	const allToolNames = () => pi.getAllTools().map((tool) => tool.name);
+
 	const publishMode = (ctx: ExtensionContext, mode: AgentMode) => {
 		currentMode = mode;
 		emitAgentModeChanged(pi.events, mode);
@@ -42,8 +45,20 @@ export default function (pi: ExtensionAPI): void {
 	};
 
 	const switchMode = async (ctx: ExtensionContext, mode: AgentMode) => {
+		const leavingPlan = currentMode === "plan" && mode !== "plan";
 		applyAgentMode(ctx.cwd, mode, { emitReload: emitReload });
 		publishMode(ctx, mode);
+		if (leavingPlan) {
+			const tools = allToolNames();
+			if (tools.length > 0) {
+				pi.setActiveTools(tools);
+			}
+			pi.sendMessage({
+				customType: "agent-plan-mode-ended",
+				content: PLAN_MODE_ENDED_MESSAGE,
+				display: false,
+			});
+		}
 		ctx.ui.notify(`Mode: ${mode}`, "info");
 	};
 
@@ -66,9 +81,15 @@ export default function (pi: ExtensionAPI): void {
 	});
 
 	pi.on("before_agent_start", async (event, _ctx) => {
-		if (currentMode !== "plan") return {};
+		if (currentMode !== "plan") {
+			const tools = allToolNames();
+			if (tools.length > 0) {
+				pi.setActiveTools(tools);
+			}
+			return {};
+		}
 
-		const registered = new Set(pi.getAllTools().map((tool) => tool.name));
+		const registered = new Set(allToolNames());
 		const activeTools = PLAN_MODE_TOOLS.filter((name) => registered.has(name));
 		if (activeTools.length > 0) {
 			pi.setActiveTools([...activeTools]);

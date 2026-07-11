@@ -3,9 +3,28 @@ import type {
 	ExtensionAPI,
 	ExtensionContext,
 } from "@earendil-works/pi-coding-agent";
+import type {
+	EvaluateOptions,
+	PermissionEvaluator,
+} from "../permission-evaluator.ts";
 import type { PermissionSession } from "../permission-session.ts";
 import { sanitizeSkillPromptBlocks } from "../sanitizers/skill-prompt.ts";
 import { sanitizeAvailableToolsSection } from "../sanitizers/system-prompt.ts";
+import type { FlatPermissionConfig } from "../types.ts";
+
+export function selectAllowedToolNames(
+	toolNames: readonly string[],
+	permission: FlatPermissionConfig,
+	evaluator: PermissionEvaluator,
+	options: EvaluateOptions = {},
+): string[] {
+	const allowedTools: string[] = [];
+	for (const toolName of toolNames) {
+		const state = evaluator.getToolPermission(permission, toolName, options);
+		if (state !== "deny") allowedTools.push(toolName);
+	}
+	return allowedTools;
+}
 
 export function registerBeforeAgentStart(
 	pi: ExtensionAPI,
@@ -18,16 +37,18 @@ export function registerBeforeAgentStart(
 
 		const config = session.getConfig();
 		const permission = config.permission ?? {};
-		const activeTools = pi.getActiveTools();
-		const allowedTools: string[] = [];
-
-		for (const toolName of activeTools) {
-			const state = session.evaluator.getToolPermission(permission, toolName, {
+		// Start from all registered tools so leaving a narrowed mode (e.g. plan)
+		// can expand write/edit/bash again — getActiveTools() only shrinks.
+		const candidateTools = pi.getAllTools().map((tool) => tool.name);
+		const allowedTools = selectAllowedToolNames(
+			candidateTools,
+			permission,
+			session.evaluator,
+			{
 				yoloMode: config.yoloMode,
 				sessionApprovals: session.sessionApprovals,
-			});
-			if (state !== "deny") allowedTools.push(toolName);
-		}
+			},
+		);
 
 		pi.setActiveTools(allowedTools);
 

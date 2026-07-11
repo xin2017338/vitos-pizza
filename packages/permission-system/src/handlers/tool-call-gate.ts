@@ -8,6 +8,7 @@ import {
 } from "../forwarding/forwarder.ts";
 import { getSubagentSessionRegistry } from "../forwarding/subagent-registry.ts";
 import { runGatePipeline } from "../gates/pipeline.ts";
+import { patternForSessionApproval } from "../permission-evaluator.ts";
 import type { PermissionSession } from "../permission-session.ts";
 import { emitPermissionEvent } from "../service.ts";
 import type { GateContext } from "../types.ts";
@@ -49,6 +50,7 @@ export function registerToolCallGate(
 			platform: process.platform,
 			skillDirs: deps.getSkillDirs?.() ?? [],
 			registeredTools,
+			sessionApprovals: session.sessionApprovals,
 		});
 
 		emitPermissionEvent(pi, "permissions:decision", {
@@ -90,7 +92,10 @@ export function registerToolCallGate(
 		}
 
 		if (decision.state === "approved_for_session" && result.matchedPattern) {
-			session.sessionApprovals.add(result.surface, result.matchedPattern);
+			session.sessionApprovals.add(
+				result.surface,
+				patternForSessionApproval(result.surface, result.matchedPattern),
+			);
 		}
 	});
 }

@@ -17,6 +17,7 @@ Working rules:
 - Prefer small, ordered, actionable tasks over vague phases.
 - Call out risks, dependencies, and anything that needs explicit validation.
 - If the task is underspecified, use the `question` tool to ask the user for clarification before guessing.
+- Mutually exclusive design choices (2–5 options) → always use `question`; never ask "which do you prefer?" in free text.
 
 Output format:
 
@@ -39,5 +40,7 @@ Which tasks depend on others.
 
 ## Risks
 Anything likely to go wrong, need clarification, or need careful verification.
+
+Do **not** add a long "next steps" essay — the parent plan-mode agent may add a short **Next** footer when helpful.
 
 Keep the plan concrete. Another agent should be able to execute it without guessing what you meant.

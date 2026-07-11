@@ -1,11 +1,14 @@
 import { evaluateBashCommand } from "../bash/matcher.ts";
-import type { PermissionEvaluator } from "../permission-evaluator.ts";
+import type {
+	EvaluateOptions,
+	PermissionEvaluator,
+	SessionApprovals,
+} from "../permission-evaluator.ts";
 import { inferSkillNameFromPath } from "../sanitizers/skill-prompt.ts";
 import type {
 	FlatPermissionConfig,
 	GateContext,
 	PermissionCheckResult,
-	PermissionState,
 } from "../types.ts";
 import {
 	extractMcpTarget,
@@ -19,6 +22,7 @@ export interface GatePipelineOptions {
 	platform?: NodeJS.Platform;
 	skillDirs?: readonly string[];
 	registeredTools?: ReadonlySet<string>;
+	sessionApprovals?: SessionApprovals;
 }
 
 export function runGatePipeline(
@@ -28,9 +32,10 @@ export function runGatePipeline(
 	options: GatePipelineOptions = {},
 ): PermissionCheckResult {
 	const { toolName, input, cwd } = ctx;
-	const evalOptions = {
+	const evalOptions: EvaluateOptions = {
 		yoloMode: options.yoloMode,
 		platform: options.platform,
+		sessionApprovals: options.sessionApprovals,
 	};
 
 	if (options.registeredTools && !options.registeredTools.has(toolName)) {
@@ -59,11 +64,7 @@ export function runGatePipeline(
 		);
 		if (isExternalPath(pathValue, cwd)) {
 			const externalRules = permission.external_directory;
-			if (
-				typeof externalRules === "object" &&
-				externalRules !== null &&
-				!Array.isArray(externalRules)
-			) {
+			if (externalRules !== undefined) {
 				checks.push(
 					evaluator.evaluateSurface(
 						permission,
@@ -73,27 +74,22 @@ export function runGatePipeline(
 						evalOptions,
 					),
 				);
-			} else if (typeof externalRules === "string") {
-				checks.push({
-					state: externalRules as PermissionState,
-					matchedPattern: "external_directory",
-					surface: "external_directory",
-					value: normalizedPath,
-					origin: "project",
-				});
 			}
 		}
 	}
 
 	const toolPermission = permission[toolName];
 	if (typeof toolPermission === "string") {
-		checks.push({
-			state: toolPermission as PermissionState,
-			matchedPattern: toolName,
-			surface: toolName,
-			value: toolName,
-			origin: "project",
-		});
+		// Evaluate via the tool surface so session approvals / yolo apply.
+		checks.push(
+			evaluator.evaluateSurface(
+				permission,
+				toolName,
+				toolName,
+				"project",
+				evalOptions,
+			),
+		);
 	} else {
 		checks.push(
 			evaluator.evaluateSurface(

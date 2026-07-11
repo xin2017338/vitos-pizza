@@ -1,1 +1,4 @@
-export { SessionApprovals } from "./permission-evaluator.ts";
+export {
+	patternForSessionApproval,
+	SessionApprovals,
+} from "./permission-evaluator.ts";

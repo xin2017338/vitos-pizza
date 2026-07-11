@@ -14,13 +14,13 @@ Vito's Pizzeria uses three modes via `/mode` or `F6`:
 | Mode | When to use |
 |------|-------------|
 | **agent** | Default balanced work |
-| **plan** | Read-only exploration — scout → planner, `question` for clarification |
+| **plan** | Read-only planning — planner (+ optional scout), `question` for clarification; optional short **Next** footer |
 | **execute** | Full implementation after plan is approved |
 
-In **plan** mode the main agent cannot write/edit/bash. Delegate with subagents:
+In **plan** mode the main agent cannot write/edit/bash. Delegate with subagents. Scout is optional — use it only when codebase recon is needed; otherwise call planner directly. When recon spans independent areas, run multiple scouts in parallel (`tasks: [...]`) then planner:
 
 ```
-scout → planner → (user confirms) → switch to execute → worker
+[optional scout(s) →] planner → (user confirms) → switch to execute → worker
 ```
 
 ## Built-in agents
@@ -35,10 +35,16 @@ scout → planner → (user confirms) → switch to execute → worker
 ## Typical workflow
 
 ```
-scout → planner → worker
+[optional scout →] planner → worker
 ```
 
-### Chain (one tool call)
+### Planner only (enough context)
+
+```json
+{ "agent": "planner", "task": "Create an implementation plan for ..." }
+```
+
+### Chain with scout (when recon is needed)
 
 ```json
 {
