@@ -15,4 +15,8 @@ All notable changes to vitos-pizza are documented here.
 
 - Nested `packages/xin-pi` aggregator
 - `@xin-pi/core`, template scaffold, postinstall symlink hack
-- npm publish workflow (not supported yet)
+
+### Publishing
+
+- GitHub Actions workflow publishes `@vitos-pizza/vitos-pizza` to npm on `v*` tags (`NPM_TOKEN` secret)
+- `scripts/prepare-publish.mjs` rewrites `file:` workspace deps for the npm tarball

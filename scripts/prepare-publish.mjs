@@ -86,7 +86,10 @@ function prepack() {
 
 	rootPkg.name = "@vitos-pizza/vitos-pizza";
 	delete rootPkg.private;
-	rootPkg.publishConfig = { access: "public" };
+	rootPkg.publishConfig = {
+		access: "public",
+		registry: "https://registry.npmjs.org/",
+	};
 	rootPkg.repository = {
 		type: "git",
 		url: "git+https://github.com/xin2017338/vitos-pizza.git",
