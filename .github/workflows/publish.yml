@@ -10,7 +10,7 @@ on:
 
 permissions:
   contents: read
-  id-token: write
+  id-token: write # Required for npm Trusted Publishing (OIDC)
 
 jobs:
   publish:
@@ -22,17 +22,20 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version: "24"
           registry-url: "https://registry.npmjs.org"
           scope: "@vitos-pizza"
+          package-manager-cache: false
+
+      # Trusted Publishing requires npm >= 11.5.1
+      - name: Upgrade npm
+        run: npm install -g npm@latest
 
       - name: Install dependencies
         run: npm ci
 
       - name: Check version not already published
         id: check
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           set -euo pipefail
           NAME="$(node -p "require('./package.json').name")"
@@ -47,15 +50,14 @@ jobs:
             echo "Will publish ${NAME}@${VERSION}"
           fi
 
+      # No NODE_AUTH_TOKEN / NPM_TOKEN — OIDC Trusted Publishing only
       - name: Publish
         if: steps.check.outputs.already == 'false'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --access public --provenance
+        run: npm publish --access public
 
       - name: Summary
         run: |
-          echo "### npm publish" >> "$GITHUB_STEP_SUMMARY"
+          echo "### npm publish (Trusted Publishing / OIDC)" >> "$GITHUB_STEP_SUMMARY"
           echo "- Package: \`${{ steps.check.outputs.name }}@${{ steps.check.outputs.version }}\`" >> "$GITHUB_STEP_SUMMARY"
           if [ "${{ steps.check.outputs.already }}" = "true" ]; then
             echo "- Result: skipped (already published)" >> "$GITHUB_STEP_SUMMARY"

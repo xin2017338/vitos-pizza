@@ -18,5 +18,7 @@ All notable changes to vitos-pizza are documented here.
 
 ### Publishing
 
-- GitHub Actions workflow publishes `@vitos-pizza/vitos-pizza` to npm on `v*` tags (`NPM_TOKEN` secret)
+- GitHub Actions publishes `@vitos-pizza/vitos-pizza` via **npm Trusted Publishing (OIDC)** — no long-lived `NPM_TOKEN`
+- Workflow: `.github/workflows/publish.yml` (triggers on `v*` tags / `workflow_dispatch`)
 - `scripts/prepare-publish.mjs` rewrites `file:` workspace deps for the npm tarball
+- First package version must be published once manually (or as a stub) before Trusted Publisher can be configured on npmjs.com
