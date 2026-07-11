@@ -25,14 +25,13 @@ jobs:
           node-version: "24"
           registry-url: "https://registry.npmjs.org"
           scope: "@vitos-pizza"
-          package-manager-cache: false
-
-      # Trusted Publishing requires npm >= 11.5.1
-      - name: Upgrade npm
-        run: npm install -g npm@latest
 
       - name: Install dependencies
         run: npm ci
+
+      # Trusted Publishing requires npm >= 11.5.1 (after install to avoid lockfile issues)
+      - name: Upgrade npm
+        run: npm install -g npm@latest
 
       - name: Check version not already published
         id: check
