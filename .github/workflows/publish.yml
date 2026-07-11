@@ -47,12 +47,6 @@ jobs:
             echo "Will publish ${NAME}@${VERSION}"
           fi
 
-      - name: Dry-run pack
-        if: steps.check.outputs.already == 'false'
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npm publish --dry-run --access public
-
       - name: Publish
         if: steps.check.outputs.already == 'false'
         env:
