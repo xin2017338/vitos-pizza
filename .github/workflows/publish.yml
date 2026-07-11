@@ -22,15 +22,15 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: "24"
+          node-version: "22"
           registry-url: "https://registry.npmjs.org"
           scope: "@vitos-pizza"
 
       - name: Install dependencies
         run: npm ci
 
-      # Trusted Publishing requires npm >= 11.5.1 (after install to avoid lockfile issues)
-      - name: Upgrade npm
+      # Trusted Publishing requires npm >= 11.5.1
+      - name: Upgrade npm for OIDC publish
         run: npm install -g npm@latest
 
       - name: Check version not already published
