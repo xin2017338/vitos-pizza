@@ -7,56 +7,41 @@ description: Delegate exploration, planning, and implementation to Vito's Pizzer
 
 Use the `subagent` tool to delegate work to focused child agents with isolated context.
 
-## Agent modes
+## Modes
 
-Vito's Pizzeria uses three modes via `/mode` or `Ctrl+.` / `Alt+M`:
-
-| Mode | When to use |
-|------|-------------|
-| **agent** | Default balanced work |
-| **plan** | Read-only planning — planner (+ optional scout); `question` available anytime when helpful; optional short **Next** footer |
-| **execute** | Full implementation after plan is approved |
-
-In **plan** mode the main agent cannot write/edit/bash. Delegate with subagents. Scout is optional — use it only when codebase recon is needed; otherwise call planner directly. When recon spans independent areas, run multiple scouts in parallel (`tasks: [...]`) then planner. The main agent, scout, and planner can all use `question` during plan when clarification would help (not required if context is enough):
-
-```
-[optional scout(s) →] planner → (user confirms) → switch to execute → worker
-```
+| Mode | Constraint |
+|------|------------|
+| **plan** | Read-only. Scout (optional) → planner. Never call worker. |
+| **agent** / **execute** | May call worker after a plan is approved (or for focused implementation). |
 
 ## Built-in agents
 
 | Agent | Use when |
 |-------|----------|
-| `scout` | Fast codebase recon; returns compressed context; may use `question` when recon needs clarification |
+| `scout` | Fast codebase recon; compressed context for handoff |
 | `planner` | Turn context + requirements into an implementation plan |
 | `worker` | Execute an approved plan with narrow, correct edits |
-| `title` | Generate short session titles (used by `@vitos-pizza/session-title`) |
 
-## Typical workflow
+## Plan-mode examples
 
-```
-[optional scout →] planner → worker
-```
-
-### Planner only (enough context)
+### Planner only
 
 ```json
 { "agent": "planner", "task": "Create an implementation plan for ..." }
 ```
 
-### Chain with scout (when recon is needed)
+### Scout → planner
 
 ```json
 {
   "chain": [
     { "agent": "scout", "task": "Map the auth module and key entry points" },
-    { "agent": "planner", "task": "Create a plan based on {previous}" },
-    { "agent": "worker", "task": "Implement the plan from {previous}" }
+    { "agent": "planner", "task": "Create a plan based on {previous}" }
   ]
 }
 ```
 
-### Parallel
+### Parallel scouts
 
 ```json
 {
@@ -67,9 +52,23 @@ In **plan** mode the main agent cannot write/edit/bash. Delegate with subagents.
 }
 ```
 
-### Async + wait
+Then call planner with the combined findings.
 
-Start work in the background, then block until it finishes:
+## After plan approval (agent / execute)
+
+### Chain through worker
+
+```json
+{
+  "chain": [
+    { "agent": "scout", "task": "Map relevant code" },
+    { "agent": "planner", "task": "Create a plan based on {previous}" },
+    { "agent": "worker", "task": "Implement the plan from {previous}" }
+  ]
+}
+```
+
+### Async + wait
 
 ```json
 { "agent": "worker", "task": "...", "async": true }

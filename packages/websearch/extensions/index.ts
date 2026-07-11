@@ -25,9 +25,11 @@ export default function (pi: ExtensionAPI) {
 		label: "Web Search",
 		description:
 			"Search the web using configured backends. Auto mode tries Exa MCP, Firecrawl, and optional keyed providers.",
-		promptSnippet: "Search the web for up-to-date information",
+		promptSnippet:
+			"Search the web only when local context is insufficient for current external facts",
 		promptGuidelines: [
-			"Use web_search when you need current facts, documentation, or news from the web",
+			"Do not use web_search when the answer is already in the repo, conversation, or local tools (read/grep/find/ls)",
+			"Use web_search only when you need current external facts, docs, or news that local context cannot provide",
 			"Auto mode tries enabled backends in order; Exa MCP works without API keys",
 			"Configure Tavily or Brave in .pi/search.json for higher-quality results",
 		],

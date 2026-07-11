@@ -24,20 +24,24 @@ describe("plan-instructions", () => {
 		expect(PLAN_MODE_TOOLS).toContain("web_read");
 	});
 
-	it("allows an optional short Next footer and structured questions", () => {
-		expect(PLAN_INSTRUCTIONS).toContain("**Next**");
-		expect(PLAN_INSTRUCTIONS).toContain("optional");
-		expect(PLAN_INSTRUCTIONS).toContain("2–3 bullets max");
+	it("authoritative system instructions cover hard rules and optional Next", () => {
+		expect(PLAN_INSTRUCTIONS).toMatch(/supersedes/i);
+		expect(PLAN_INSTRUCTIONS).toContain("worker");
+		expect(PLAN_INSTRUCTIONS).toMatch(/no write/i);
 		expect(PLAN_INSTRUCTIONS).toContain("question");
-		expect(PLAN_INSTRUCTIONS).toContain("parallel scouts");
-		expect(PLAN_INSTRUCTIONS).toContain("available anytime in plan");
-		expect(PLAN_INSTRUCTIONS).toContain("scout, and planner");
-		expect(PLAN_INSTRUCTIONS).toContain("when clarification would help");
-		expect(PLAN_MODE_MESSAGE).toContain("optionally a short **Next** footer");
-		expect(PLAN_MODE_MESSAGE).toContain("Parallel scouts");
+		expect(PLAN_INSTRUCTIONS).toMatch(/Scout is optional/i);
+		expect(PLAN_INSTRUCTIONS).toContain("**Next**");
+		expect(PLAN_INSTRUCTIONS).toContain("2–3");
+		expect(PLAN_INSTRUCTIONS).toContain("/mode execute");
+	});
+
+	it("sticky reminder is short and forbids implementation", () => {
+		expect(PLAN_MODE_MESSAGE).toContain("[PLAN MODE ACTIVE]");
+		expect(PLAN_MODE_MESSAGE).toMatch(/Read-only/i);
+		expect(PLAN_MODE_MESSAGE).toContain("worker");
 		expect(PLAN_MODE_MESSAGE).toContain("question");
-		expect(PLAN_MODE_MESSAGE).toContain("available anytime in plan");
-		expect(PLAN_MODE_MESSAGE).toContain("use when helpful");
+		expect(PLAN_MODE_MESSAGE).toContain("**Next**");
+		expect(PLAN_MODE_MESSAGE).not.toContain("```json");
 	});
 
 	it("defines a clear plan-ended signal for leaving plan mode", () => {

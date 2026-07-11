@@ -7,6 +7,7 @@ import type { Message } from "@earendil-works/pi-ai";
 import { withFileMutationQueue } from "@earendil-works/pi-coding-agent";
 import {
 	applyThinkingSuffix,
+	formatAvailableAgents,
 	type AgentConfig,
 } from "./agents.ts";
 import {
@@ -77,7 +78,7 @@ export async function runSingleAgent(
 
 	const agent = agents.find((entry) => entry.name === agentName);
 	if (!agent) {
-		const available = agents.map((entry) => `"${entry.name}"`).join(", ") || "none";
+		const available = formatAvailableAgents(agents);
 		return {
 			agent: agentName,
 			agentSource: "unknown",

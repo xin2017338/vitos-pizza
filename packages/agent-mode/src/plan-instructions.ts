@@ -12,77 +12,37 @@ export const PLAN_MODE_TOOLS = [
 
 export const PLAN_INSTRUCTIONS = `## PLAN MODE
 
-You are in **plan** mode. Do not call write, edit, or bash on the main agent.
+This supersedes conflicting skill or prior guidance about implementing code or calling worker in this mode.
 
-**question tool (available anytime in plan)**
-- The main agent, scout, and planner can all use \`question\` during plan mode
-- Mutually exclusive design choices (2–5 options) → prefer \`question\` over free-text "which do you prefer?"
-- Use \`question\` when clarification would help; skip it when context is already enough
+**Hard rules**
+- Main agent: no write, edit, or bash. Do not call worker.
+- Produce an Implementation Plan and wait for confirmation.
+- To implement, the user switches via \`/mode execute\` or \`/mode agent\`.
 
-**Planning workflow**
-- Produce an Implementation Plan and wait for user confirmation
-- Do **not** call worker or edit code directly in this mode
+**Clarification**
+- Prefer \`question\` for mutually exclusive choices (2–5 options); skip when context is enough. Available to main, scout, and planner.
 
-**When to explore**
-- Scout is **optional**. Skip it when the task is clear, scoped to known files, or the user already provided enough context
-- Call scout only when you need codebase recon (unfamiliar area, many files, unclear entry points)
-- Independent areas → parallel scouts via \`subagent({ tasks: [...] })\` to finish recon faster; then planner
-- For light lookups, the main agent may use read/grep/find/ls directly — no scout required
+**Exploration**
+- Scout is optional — only for unfamiliar or multi-file recon. Parallel scouts via \`subagent({ tasks: [...] })\` for independent areas, then planner. Light lookups: use read/grep/find/ls yourself.
+- Web tools only for current external facts outside the repo.
 
 **Delegation**
-- Enough context already → \`subagent({ agent: "planner", task: "..." })\`
-- Need recon first → \`subagent({ chain: [{ agent: "scout", task: "..." }, { agent: "planner", task: "..." }] })\`
-- Multi-area recon → parallel scouts, then planner with the combined findings
+- Enough context → \`subagent({ agent: "planner", task })\`
+- Need recon → \`subagent({ chain: [scout, planner] })\`
 
-**After the plan (optional)**
-When helpful, add a short **Next** footer — Cursor-style suggested actions. Skip it if the next step is already obvious.
-- 2–3 bullets max; each one line
-- Concrete verbs the user can reply with (e.g. confirm → \`/mode execute\`, tweak scope)
-- No essays, no restating the whole plan
+**Optional Next footer** (2–3 one-line reply verbs) when the next step is not obvious:
 
-Example:
 \`\`\`
 **Next**
-- Confirm → \`/mode execute\` (or Ctrl+. / Alt+M) to implement
-- Say what to change if the scope is off
-\`\`\`
-
-**To implement**, the user must switch to execute or agent mode (\`/mode execute\` or \`/mode agent\`).`;
+- Confirm → \`/mode execute\` (or Ctrl+. / Alt+M)
+- Say what to change if scope is off
+\`\`\``;
 
 export const PLAN_MODE_MESSAGE = `[PLAN MODE ACTIVE]
 
-You are in plan mode. The main agent must NOT write, edit, or run bash.
-
-1. \`question\` is available anytime in plan (main agent, scout, and planner) — use when helpful; prefer it over free-text choice questions
-2. Scout only if needed; parallel scouts (\`tasks: [...]\`) when exploring independent areas; otherwise go straight to planner
-3. Return the plan and wait; optionally a short **Next** footer (2–3 one-line actions) when helpful
-4. Do NOT call worker or make code changes
-
-Planner only (no scout):
-\`\`\`json
-{ "agent": "planner", "task": "Create an implementation plan for ..." }
-\`\`\`
-
-Scout → planner (when recon is needed):
-\`\`\`json
-{
-  "chain": [
-    { "agent": "scout", "task": "Map relevant code for this task" },
-    { "agent": "planner", "task": "Create an implementation plan from {previous}" }
-  ]
-}
-\`\`\`
-
-Parallel scouts (independent areas), then planner:
-\`\`\`json
-{
-  "tasks": [
-    { "agent": "scout", "task": "Map area A" },
-    { "agent": "scout", "task": "Map area B" }
-  ]
-}
-\`\`\`
-Then \`subagent({ agent: "planner", task: "Plan from the scout findings above" })\`.`;
+Read-only planning. No write/edit/bash/worker.
+Clarify with \`question\` when needed. Scout only if recon is required; otherwise planner.
+Return the plan and wait; optionally a short **Next** footer.`;
 
 export const PLAN_MODE_ENDED_MESSAGE = `[PLAN MODE ENDED]
 

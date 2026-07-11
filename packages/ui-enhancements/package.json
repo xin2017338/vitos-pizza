@@ -1,6 +1,6 @@
 {
 	"name": "@vitos-pizza/ui-enhancements",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "TUI and UI enhancements for Vito's Pizzeria Pi distribution",
 	"type": "module",
 	"license": "MIT",

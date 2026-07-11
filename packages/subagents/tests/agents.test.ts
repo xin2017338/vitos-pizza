@@ -1,5 +1,10 @@
 import { describe, expect, it } from "vitest";
-import { discoverAgents, getBuiltinAgentsDir } from "../src/agents.ts";
+import {
+	discoverAgents,
+	formatAvailableAgents,
+	getBuiltinAgentsDir,
+	isPublicAgent,
+} from "../src/agents.ts";
 
 describe("discoverAgents", () => {
 	it("loads builtin scout, planner, and worker agents", () => {
@@ -7,6 +12,13 @@ describe("discoverAgents", () => {
 		expect(builtinAgentsDir).toBe(getBuiltinAgentsDir());
 		const names = agents.map((agent) => agent.name).sort();
 		expect(names).toEqual(["planner", "scout", "title", "worker"]);
+	});
+
+	it("hides the title agent from public listings", () => {
+		const { agents } = discoverAgents(process.cwd(), "both");
+		expect(isPublicAgent("title")).toBe(false);
+		expect(formatAvailableAgents(agents)).not.toContain("title");
+		expect(formatAvailableAgents(agents)).toContain("scout");
 	});
 
 	it("prefers builtin agents over duplicates", () => {

@@ -2,6 +2,20 @@
 
 All notable changes to vitos-pizza are documented here.
 
+## [0.3.1] - 2026-07-11
+
+### Changed
+
+- **Prompt optimization** — plan mode: authoritative short system instructions + supersede; sticky reminder without JSON dumps
+- Subagents skill: mode constraints one-liners; plan vs execute/agent examples split (no worker chain in plan)
+- Scout / planner / worker / title prompts tightened; planner output adds `## 功能验收`
+- Hide internal `title` agent from public subagent listings
+- `web_search` guidelines: prefer local tools; use web only for current external facts
+
+### Acknowledgments
+
+- Claude Code plan-mode reminder pattern and OpenAI Codex base-instruction style (prompt craft reference)
+
 ## [0.3.0] - 2026-07-11
 
 ### Added

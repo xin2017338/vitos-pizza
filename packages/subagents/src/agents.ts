@@ -36,6 +36,23 @@ const THINKING_LEVELS = new Set([
 	"max",
 ]);
 
+/** Internal agents (e.g. session naming) — callable by name, not listed to the main agent. */
+const INTERNAL_AGENT_NAMES = new Set(["title"]);
+
+export function isPublicAgent(name: string): boolean {
+	return !INTERNAL_AGENT_NAMES.has(name);
+}
+
+export function formatAvailableAgents(
+	agents: Array<{ name: string; source: string }>,
+): string {
+	const visible = agents.filter((agent) => isPublicAgent(agent.name));
+	return (
+		visible.map((agent) => `${agent.name} (${agent.source})`).join(", ") ||
+		"none"
+	);
+}
+
 export function getBuiltinAgentsDir(): string {
 	return path.join(
 		path.dirname(fileURLToPath(import.meta.url)),

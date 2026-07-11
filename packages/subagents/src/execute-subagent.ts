@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import type { AgentToolResult } from "@earendil-works/pi-agent-core";
-import { discoverAgents } from "./agents.ts";
+import { discoverAgents, formatAvailableAgents } from "./agents.ts";
 import { runSingleAgent } from "./run-agent.ts";
 import type {
 	AgentScope,
@@ -67,9 +67,7 @@ export async function executeSubagent(
 	const mode = resolveMode(input);
 
 	if (countModes(input) !== 1 || !mode) {
-		const available =
-			agents.map((agent) => `${agent.name} (${agent.source})`).join(", ") ||
-			"none";
+		const available = formatAvailableAgents(agents);
 		return {
 			content: [
 				{
@@ -267,8 +265,7 @@ export async function executeSubagent(
 		};
 	}
 
-	const available =
-		agents.map((agent) => `${agent.name} (${agent.source})`).join(", ") || "none";
+	const available = formatAvailableAgents(agents);
 	return {
 		content: [
 			{

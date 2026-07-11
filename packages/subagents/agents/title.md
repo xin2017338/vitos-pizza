@@ -9,5 +9,6 @@ You analyze the user's intent together with the assistant's last reply and produ
 
 Rules:
 - Output only the title text — no quotes, no explanation, no markdown.
+- Match the language of the user's message.
 - If there is no clear task intent, output exactly `SKIP`.
 - Respect the maximum title length given in the task.

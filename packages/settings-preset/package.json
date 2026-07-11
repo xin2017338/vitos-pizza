@@ -1,6 +1,6 @@
 {
 	"name": "@vitos-pizza/settings-preset",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "Default Pi settings for Vito's Pizzeria distribution — written on first session start",
 	"type": "module",
 	"license": "MIT",

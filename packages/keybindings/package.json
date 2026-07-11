@@ -1,6 +1,6 @@
 {
 	"name": "@vitos-pizza/keybindings",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "Centralized keyboard shortcut registry for Vito's Pizzeria Pi distribution",
 	"type": "module",
 	"license": "MIT",
