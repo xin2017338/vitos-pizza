@@ -8,9 +8,20 @@ const rootPkgPath = join(root, "package.json");
 
 const RESOURCE_TYPES = ["extensions", "skills", "prompts", "themes"];
 
-const BUNDLED_FIRST = [];
-const BUNDLED_LAST = [];
-const LOCAL_ORDER = ["permission-system", "settings-preset", "question", "ui-enhancements", "agent-mode", "subagents", "websearch", "session-title", "todoist", "keybindings"];
+/** Local modules after permission-system, before agent-mode (plan setActiveTools). */
+const LOCAL_ORDER = [
+	"permission-system",
+	"settings-preset",
+	"hypa",
+	"question",
+	"ui-enhancements",
+	"subagents",
+	"websearch",
+	"session-title",
+	"keybindings",
+	"agent-mode",
+	"todoist",
+];
 
 function loadJson(path) {
 	return JSON.parse(readFileSync(path, "utf8"));
@@ -157,9 +168,9 @@ function sortPackagesByRequires(packages) {
 
 const packages = discoverPackages();
 const sortedPackages = sortPackagesByRequires(packages);
-const packageByDir = new Map(packages.map((p) => [p.dir, p]));
 const rootPkg = loadJson(rootPkgPath);
 const existingDeps = rootPkg.dependencies ?? {};
+const piBundled = Array.isArray(rootPkg.piBundled) ? rootPkg.piBundled : [];
 
 const dependencies = {};
 for (const [name, spec] of Object.entries(existingDeps)) {
@@ -174,7 +185,7 @@ for (const { dir, pkg } of packages) {
 
 const piEntries = [];
 
-for (const npmName of BUNDLED_FIRST) {
+for (const npmName of piBundled) {
 	const pi = resolveBundledPaths(npmName);
 	if (pi) piEntries.push({ pi });
 }
@@ -185,17 +196,12 @@ for (const entry of sortedPackages) {
 	});
 }
 
-for (const npmName of BUNDLED_LAST) {
-	const pi = resolveBundledPaths(npmName);
-	if (pi) piEntries.push({ pi });
-}
-
 rootPkg.dependencies = dependencies;
+rootPkg.piBundled = piBundled;
 rootPkg.pi = mergePiManifest(piEntries);
 
 writeFileSync(rootPkgPath, `${JSON.stringify(rootPkg, null, "\t")}\n`, "utf8");
 
-const bundled = [...BUNDLED_FIRST, ...BUNDLED_LAST].join(", ");
 console.log(
-	`Synced vitos-pizza manifest: ${packages.length} local module(s) [${sortedPackages.map((p) => p.dir).join(", ")}], bundled: ${bundled || "(none)"}`,
+	`Synced vitos-pizza manifest: ${packages.length} local module(s) [${sortedPackages.map((p) => p.dir).join(", ")}], piBundled: ${piBundled.join(", ") || "(none)"}`,
 );

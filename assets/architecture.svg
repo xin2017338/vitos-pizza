@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 620" role="img" aria-labelledby="title desc">
+  <title id="title">vitos-pizza architecture</title>
+  <desc id="desc">Pi coding agent with Vito's Pizzeria capability modules and bundled Hypa</desc>
+
+  <defs>
+    <linearGradient id="piBar" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#1e293b"/>
+      <stop offset="100%" stop-color="#334155"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f4a442"/>
+      <stop offset="100%" stop-color="#d97706"/>
+    </linearGradient>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="108%">
+      <feDropShadow dx="0" dy="1" stdDeviation="1.5" flood-color="#0f172a" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+
+  <rect width="960" height="620" fill="#f8fafc" rx="12"/>
+
+  <text x="32" y="36" font-family="ui-sans-serif, system-ui, sans-serif" font-size="18" font-weight="700" fill="#0f172a">vitos-pizza</text>
+  <text x="140" y="36" font-family="ui-sans-serif, system-ui, sans-serif" font-size="13" fill="#64748b">Pi distribution / capability map</text>
+
+  <rect x="32" y="56" width="896" height="56" rx="10" fill="url(#piBar)" filter="url(#shadow)"/>
+  <text x="480" y="82" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="15" font-weight="600" fill="#f8fafc">Pi coding agent</text>
+  <text x="480" y="100" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#cbd5e1">runtime / tools / sessions / compaction</text>
+
+  <line x1="480" y1="112" x2="480" y2="136" stroke="#94a3b8" stroke-width="2"/>
+  <polygon points="480,142 474,132 486,132" fill="#94a3b8"/>
+
+  <rect x="32" y="148" width="896" height="150" rx="10" fill="#fff7ed" stroke="#fed7aa" stroke-width="1.5"/>
+  <text x="48" y="172" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" fill="#c2410c">Workflow &amp; safety</text>
+
+  <g font-family="ui-sans-serif, system-ui, sans-serif">
+    <rect x="48" y="186" width="200" height="88" rx="8" fill="#ffffff" stroke="#e2e8f0" filter="url(#shadow)"/>
+    <text x="148" y="214" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Modes</text>
+    <text x="148" y="234" text-anchor="middle" font-size="11" fill="#64748b">agent / plan / execute</text>
+    <text x="148" y="252" text-anchor="middle" font-size="10" fill="#94a3b8">agent-mode</text>
+
+    <rect x="268" y="186" width="200" height="88" rx="8" fill="#ffffff" stroke="#e2e8f0" filter="url(#shadow)"/>
+    <text x="368" y="214" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Permissions</text>
+    <text x="368" y="234" text-anchor="middle" font-size="11" fill="#64748b">allow / ask / deny</text>
+    <text x="368" y="252" text-anchor="middle" font-size="10" fill="#94a3b8">permission-system</text>
+
+    <rect x="488" y="186" width="200" height="88" rx="8" fill="#ffffff" stroke="#e2e8f0" filter="url(#shadow)"/>
+    <text x="588" y="214" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Subagents</text>
+    <text x="588" y="234" text-anchor="middle" font-size="11" fill="#64748b">scout / planner / worker</text>
+    <text x="588" y="252" text-anchor="middle" font-size="10" fill="#94a3b8">subagents</text>
+
+    <rect x="708" y="186" width="200" height="88" rx="8" fill="#ffffff" stroke="#e2e8f0" filter="url(#shadow)"/>
+    <text x="808" y="214" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Question</text>
+    <text x="808" y="234" text-anchor="middle" font-size="11" fill="#64748b">structured ask-user</text>
+    <text x="808" y="252" text-anchor="middle" font-size="10" fill="#94a3b8">question</text>
+  </g>
+
+  <rect x="32" y="314" width="896" height="150" rx="10" fill="#eff6ff" stroke="#bfdbfe" stroke-width="1.5"/>
+  <text x="48" y="338" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" fill="#1d4ed8">Context &amp; tools</text>
+
+  <g font-family="ui-sans-serif, system-ui, sans-serif">
+    <rect x="48" y="352" width="200" height="88" rx="8" fill="#ffffff" stroke="#fdba74" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="48" y="352" width="6" height="88" rx="3" fill="url(#accent)"/>
+    <text x="148" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Hypa compress</text>
+    <text x="148" y="400" text-anchor="middle" font-size="11" fill="#64748b">bash rewrite / hypa_*</text>
+    <text x="148" y="418" text-anchor="middle" font-size="10" fill="#94a3b8">pi-hypa + hypa glue</text>
+
+    <rect x="268" y="352" width="200" height="88" rx="8" fill="#ffffff" stroke="#e2e8f0" filter="url(#shadow)"/>
+    <text x="368" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Web search</text>
+    <text x="368" y="400" text-anchor="middle" font-size="11" fill="#64748b">web_search / web_read</text>
+    <text x="368" y="418" text-anchor="middle" font-size="10" fill="#94a3b8">websearch</text>
+
+    <rect x="488" y="352" width="200" height="88" rx="8" fill="#ffffff" stroke="#e2e8f0" filter="url(#shadow)"/>
+    <text x="588" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Todo list</text>
+    <text x="588" y="400" text-anchor="middle" font-size="11" fill="#64748b">/todo + LLM tools</text>
+    <text x="588" y="418" text-anchor="middle" font-size="10" fill="#94a3b8">todoist</text>
+
+    <rect x="708" y="352" width="200" height="88" rx="8" fill="#ffffff" stroke="#e2e8f0" filter="url(#shadow)"/>
+    <text x="808" y="380" text-anchor="middle" font-size="13" font-weight="700" fill="#0f172a">Session title</text>
+    <text x="808" y="400" text-anchor="middle" font-size="11" fill="#64748b">auto-name after turn 1</text>
+    <text x="808" y="418" text-anchor="middle" font-size="10" fill="#94a3b8">session-title</text>
+  </g>
+
+  <rect x="32" y="480" width="896" height="72" rx="10" fill="#f1f5f9" stroke="#e2e8f0" stroke-width="1.5"/>
+  <text x="48" y="504" font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" font-weight="700" fill="#475569">UX &amp; defaults</text>
+
+  <g font-family="ui-sans-serif, system-ui, sans-serif" font-size="12" fill="#0f172a">
+    <rect x="48" y="516" width="280" height="24" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="188" y="532" text-anchor="middle">UI enhancements / TUI chrome</text>
+
+    <rect x="340" y="516" width="280" height="24" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="480" y="532" text-anchor="middle">Keybindings / Ctrl+. / Alt+M</text>
+
+    <rect x="632" y="516" width="280" height="24" rx="6" fill="#ffffff" stroke="#e2e8f0"/>
+    <text x="772" y="532" text-anchor="middle">Settings preset / first-run seed</text>
+  </g>
+
+  <text x="480" y="590" text-anchor="middle" font-family="ui-sans-serif, system-ui, sans-serif" font-size="11" fill="#64748b">piBundled = @hypabolic/pi-hypa  |  local modules = @vitos-pizza/*</text>
+</svg>

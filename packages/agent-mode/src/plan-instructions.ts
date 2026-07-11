@@ -3,6 +3,10 @@ export const PLAN_MODE_TOOLS = [
 	"grep",
 	"find",
 	"ls",
+	"hypa_read",
+	"hypa_grep",
+	"hypa_find",
+	"hypa_ls",
 	"question",
 	"subagent",
 	"wait",
@@ -23,7 +27,8 @@ This supersedes conflicting skill or prior guidance about implementing code or c
 - Prefer \`question\` for mutually exclusive choices (2–5 options); skip when context is enough. Available to main, scout, and planner.
 
 **Exploration**
-- Scout is optional — only for unfamiliar or multi-file recon. Parallel scouts via \`subagent({ tasks: [...] })\` for independent areas, then planner. Light lookups: use read/grep/find/ls yourself.
+- Scout is optional — only for unfamiliar or multi-file recon. Parallel scouts via \`subagent({ tasks: [...] })\` for independent areas, then planner.
+- Prefer \`hypa_read\` / \`hypa_grep\` / \`hypa_find\` / \`hypa_ls\` when available; fall back to read/grep/find/ls.
 - Web tools only for current external facts outside the repo.
 
 **Delegation**
@@ -42,7 +47,7 @@ export const PLAN_MODE_MESSAGE = `[PLAN MODE ACTIVE]
 
 Read-only planning. No write/edit/bash/worker.
 Clarify with \`question\` when needed. Scout only if recon is required; otherwise planner.
-Return the plan and wait; optionally a short **Next** footer.`;
+Prefer hypa_* read tools when available. Return the plan and wait; optionally a short **Next** footer.`;
 
 export const PLAN_MODE_ENDED_MESSAGE = `[PLAN MODE ENDED]
 

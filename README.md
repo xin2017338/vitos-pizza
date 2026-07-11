@@ -12,6 +12,26 @@
 
 Inspired by [Vito's Pizzeria](https://garfield.fandom.com/wiki/Vito_Cappelletti) from Garfield — Garfield's favorite pizza place.
 
+## Architecture
+
+![vitos-pizza architecture](./assets/architecture.png)
+
+Typical flow: **plan** → optional **scout** → **planner** → confirm → **execute** / **worker**. Shell output is compressed via Hypa bash rewrite; prefer `hypa_*` read tools when exploring.
+
+| Capability | Module | What you get |
+|------------|--------|--------------|
+| Modes | `@vitos-pizza/agent-mode` | `agent` / `plan` / `execute` — `/mode`, Ctrl+. / Alt+M |
+| Permissions | `@vitos-pizza/permission-system` | allow / ask / deny presets per mode |
+| Context compression | `@hypabolic/pi-hypa` + `@vitos-pizza/hypa` | bash rewrite, `hypa_*` tools, `/hypa` (MCP proxy off) |
+| Subagents | `@vitos-pizza/subagents` | scout · planner · worker (+ title internally) |
+| Structured questions | `@vitos-pizza/question` | `question` tool |
+| Web | `@vitos-pizza/websearch` | `web_search` / `web_read` |
+| Tasks | `@vitos-pizza/todoist` | `/todo` + LLM tools |
+| Session titles | `@vitos-pizza/session-title` | auto-name after first turn |
+| TUI | `@vitos-pizza/ui-enhancements` | border status, execute prompt chrome |
+| Shortcuts | `@vitos-pizza/keybindings` | centralized `vitos-shortcuts.json` |
+| Defaults | `@vitos-pizza/settings-preset` | seed Pi settings on first session |
+
 ## Prerequisites
 
 - Node.js >= 22.19.0
@@ -21,14 +41,16 @@ Inspired by [Vito's Pizzeria](https://garfield.fandom.com/wiki/Vito_Cappelletti)
 npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 ```
 
+Context compression uses bundled [Hypa](https://github.com/Hypabolic/Hypa) (`@hypabolic/pi-hypa`). The matching platform binary comes from npm optionalDependencies (Linux / macOS / Windows, x64 / arm64). Use `/hypa` in a session for diagnostics. MCP proxy stays **off** (this distribution does not use MCP).
+
 ## Install
 
 ```bash
 # npm (recommended)
-pi install npm:@vitos-pizza/vitos-pizza@0.3.1
+pi install npm:@vitos-pizza/vitos-pizza@0.4.0
 
 # git (pinned tag)
-pi install git:github.com/xin2017338/vitos-pizza@v0.3.1
+pi install git:github.com/xin2017338/vitos-pizza@v0.4.0
 ```
 
 From source:
@@ -58,12 +80,16 @@ After install, start `pi`. Sessions are auto-titled from the first meaningful us
 ```
 vitos-pizza/                 # Pi distribution (install this)
 ├── assets/logo.svg
+├── assets/architecture.svg  # editable capability map source
+├── assets/architecture.png  # README preview (rendered from SVG)
 ├── package.json             # distro manifest + pi-package entry
 ├── AGENTS.md
 └── packages/                # built-in modules (not installed separately)
-    ├── ui-enhancements/   # @vitos-pizza/ui-enhancements — TUI display optimizations
+    ├── ui-enhancements/     # @vitos-pizza/ui-enhancements — TUI display optimizations
     ├── agent-mode/          # @vitos-pizza/agent-mode — agent / plan / execute mode switching
     ├── permission-system/   # @vitos-pizza/permission-system — allow/ask/deny gates
+    ├── settings-preset/     # @vitos-pizza/settings-preset — seed default Pi settings
+    ├── hypa/                # @vitos-pizza/hypa — Hypa defaults (additive, no MCP proxy)
     ├── question/            # @vitos-pizza/question — structured ask-user question tool
     ├── session-title/       # @vitos-pizza/session-title — auto session naming
     ├── subagents/           # @vitos-pizza/subagents — scout/planner/worker delegation
@@ -72,7 +98,7 @@ vitos-pizza/                 # Pi distribution (install this)
     └── keybindings/         # @vitos-pizza/keybindings — centralized shortcut bindings
 ```
 
-Built-in modules are wired via `scripts/sync-pi-manifest.mjs` (supports `pi.requires` load order).
+Built-in modules are wired via `scripts/sync-pi-manifest.mjs` (supports `pi.requires` load order). Third-party Pi packages listed in root `piBundled` (currently `@hypabolic/pi-hypa`) are merged into the same manifest.
 
 | Path | Role |
 |------|------|
@@ -221,6 +247,7 @@ vitos-pizza builds on the Pi ecosystem and several open-source projects. We are 
 | [Claude Code TodoWrite / Task tools](https://code.claude.com/docs/en/agent-sdk/todo-tracking.md) | `@vitos-pizza/todoist` | Complete = status done; delete only when no longer relevant (cancelled / mistaken) |
 | [@capyup/pi-basic-tools todo](https://www.npmjs.com/package/@capyup/pi-basic-tools) | `@vitos-pizza/todoist` | completed vs deleted prompt boundary for task-list tools |
 | [pi-package-template](https://github.com/S1M0N38/pi-package-template) | Repo layout | Pi package monorepo conventions |
+| [Hypa](https://github.com/Hypabolic/Hypa) (`@hypabolic/pi-hypa`) | `@vitos-pizza/hypa` + distro bundle | Additive bash rewrite / `hypa_*` tools; MCP proxy off (FSL-1.1-ALv2) |
 
 ### Runtime & tooling libraries
 

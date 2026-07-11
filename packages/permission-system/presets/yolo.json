@@ -1,6 +1,7 @@
 {
 	"permission": {
 		"*": "allow",
+		"hypa_mcp_proxy": "deny",
 		"path": {
 			"*": "allow",
 			"*.env": "deny",

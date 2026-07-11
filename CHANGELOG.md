@@ -2,6 +2,21 @@
 
 All notable changes to vitos-pizza are documented here.
 
+## [Unreleased]
+
+## [0.4.0] - 2026-07-11
+
+### Added
+
+- **Hypa context compression** — bundles `@hypabolic/pi-hypa` (additive mode; MCP proxy off); `@vitos-pizza/hypa` seeds `~/.hypa-pi/config.json`
+- Plan mode / scout / planner / worker: `hypa_read` / `hypa_grep` / `hypa_find` / `hypa_ls` allowlisted alongside builtins
+- `scripts/sync-pi-manifest.mjs` reads root `piBundled` and merges third-party Pi package extensions
+- README **Architecture** capability map (`assets/architecture.svg` / `.png`)
+
+### Acknowledgments
+
+- [Hypa](https://github.com/Hypabolic/Hypa) / `@hypabolic/pi-hypa` (FSL-1.1-ALv2) — shell output compression and `hypa_*` tools
+
 ## [0.3.1] - 2026-07-11
 
 ### Changed

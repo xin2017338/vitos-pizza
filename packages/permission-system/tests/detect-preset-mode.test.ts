@@ -12,44 +12,15 @@ const presetsDir = join(
 
 describe("detect-preset-mode", () => {
 	it("recognizes bundled default preset", () => {
-		const mode = detectPresetMode(
-			{
-				"*": "allow",
-				read: "allow",
-				grep: "allow",
-				find: "allow",
-				ls: "allow",
-				web_search: "ask",
-				web_read: "ask",
-				path: {
-					"*": "allow",
-					"*.env": "deny",
-					"*.env.*": "deny",
-					"*.env.example": "allow",
-					"~/.ssh/*": "deny",
-				},
-				bash: {
-					"*": "ask",
-					"git status": "allow",
-					"git status *": "allow",
-					"git diff": "allow",
-					"git diff *": "allow",
-					"git log": "allow",
-					"git log *": "allow",
-					ls: "allow",
-					"ls *": "allow",
-					"npm test": "allow",
-					"npm test *": "allow",
-					"npm run typecheck": "allow",
-					"npm run lint": "allow",
-					"rm -rf *": "deny",
-					"sudo *": "ask",
-				},
-				external_directory: "ask",
-			},
-			presetsDir,
+		const defaultPreset = JSON.parse(
+			readFileSync(join(presetsDir, "default.json"), "utf8"),
+		) as { permission: Record<string, unknown> };
+
+		expect(detectPresetMode(defaultPreset.permission, presetsDir)).toBe(
+			"default",
 		);
-		expect(mode).toBe("default");
+		expect(defaultPreset.permission.hypa_read).toBe("allow");
+		expect(defaultPreset.permission.hypa_mcp_proxy).toBe("deny");
 	});
 
 	it("recognizes bundled plan preset", () => {

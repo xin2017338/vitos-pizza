@@ -29,13 +29,25 @@ describe("discoverAgents", () => {
 		expect(scout?.tools).toContain("read");
 	});
 
-	it("gives scout plan-friendly tools including question", () => {
+	it("gives scout plan-friendly tools including question and hypa reads", () => {
 		const scout = discoverAgents(process.cwd(), "both").agents.find(
 			(agent) => agent.name === "scout",
 		);
 		expect(scout?.tools).toContain("question");
 		expect(scout?.tools).toContain("web_search");
+		expect(scout?.tools).toContain("hypa_read");
+		expect(scout?.tools).toContain("hypa_grep");
 		expect(scout?.tools).not.toContain("bash");
 		expect(scout?.tools).not.toContain("write");
+		expect(scout?.tools).not.toContain("hypa_shell");
+	});
+
+	it("gives worker hypa reads plus bash without hypa_shell", () => {
+		const worker = discoverAgents(process.cwd(), "both").agents.find(
+			(agent) => agent.name === "worker",
+		);
+		expect(worker?.tools).toContain("bash");
+		expect(worker?.tools).toContain("hypa_read");
+		expect(worker?.tools).not.toContain("hypa_shell");
 	});
 });

@@ -8,12 +8,16 @@ const backupDir = join(root, ".publish-backup");
 const packagesDir = join(root, "packages");
 
 const BUNDLED_MODULES = [
+	"@hypabolic/pi-hypa",
 	"@vitos-pizza/agent-mode",
+	"@vitos-pizza/hypa",
 	"@vitos-pizza/keybindings",
 	"@vitos-pizza/permission-system",
 	"@vitos-pizza/question",
 	"@vitos-pizza/session-title",
+	"@vitos-pizza/settings-preset",
 	"@vitos-pizza/subagents",
+	"@vitos-pizza/todoist",
 	"@vitos-pizza/ui-enhancements",
 	"@vitos-pizza/websearch",
 ];

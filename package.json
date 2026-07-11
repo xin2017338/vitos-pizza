@@ -1,6 +1,6 @@
 {
 	"name": "@vitos-pizza/vitos-pizza",
-	"version": "0.3.1",
+	"version": "0.4.0",
 	"description": "Vito's Pizzeria — a Pi distribution (Garfield-approved)",
 	"publishConfig": {
 		"access": "public",
@@ -37,8 +37,10 @@
 		"typescript": "^5.8.0"
 	},
 	"dependencies": {
+		"@hypabolic/pi-hypa": "^0.1.10",
 		"typebox": "^1.1.38",
 		"@vitos-pizza/agent-mode": "file:packages/agent-mode",
+		"@vitos-pizza/hypa": "file:packages/hypa",
 		"@vitos-pizza/keybindings": "file:packages/keybindings",
 		"@vitos-pizza/permission-system": "file:packages/permission-system",
 		"@vitos-pizza/question": "file:packages/question",
@@ -49,12 +51,18 @@
 		"@vitos-pizza/ui-enhancements": "file:packages/ui-enhancements",
 		"@vitos-pizza/websearch": "file:packages/websearch"
 	},
-	"bundledDependencies": [],
-	"piBundled": [],
+	"bundledDependencies": [
+		"@hypabolic/pi-hypa"
+	],
+	"piBundled": [
+		"@hypabolic/pi-hypa"
+	],
 	"pi": {
 		"extensions": [
+			"node_modules/@hypabolic/pi-hypa/extensions",
 			"node_modules/@vitos-pizza/permission-system/extensions",
 			"node_modules/@vitos-pizza/settings-preset/extensions",
+			"node_modules/@vitos-pizza/hypa/extensions",
 			"node_modules/@vitos-pizza/question/extensions",
 			"node_modules/@vitos-pizza/ui-enhancements/extensions",
 			"node_modules/@vitos-pizza/subagents/extensions",
