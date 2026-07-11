@@ -1,6 +1,6 @@
 {
 	"name": "@vitos-pizza/vitos-pizza",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "Vito's Pizzeria — a Pi distribution (Garfield-approved)",
 	"publishConfig": {
 		"access": "public",
@@ -37,11 +37,13 @@
 		"typescript": "^5.8.0"
 	},
 	"dependencies": {
+		"typebox": "^1.1.38",
 		"@vitos-pizza/agent-mode": "file:packages/agent-mode",
 		"@vitos-pizza/keybindings": "file:packages/keybindings",
 		"@vitos-pizza/permission-system": "file:packages/permission-system",
 		"@vitos-pizza/question": "file:packages/question",
 		"@vitos-pizza/session-title": "file:packages/session-title",
+		"@vitos-pizza/settings-preset": "file:packages/settings-preset",
 		"@vitos-pizza/subagents": "file:packages/subagents",
 		"@vitos-pizza/todoist": "file:packages/todoist",
 		"@vitos-pizza/ui-enhancements": "file:packages/ui-enhancements",
@@ -52,14 +54,15 @@
 	"pi": {
 		"extensions": [
 			"node_modules/@vitos-pizza/permission-system/extensions",
+			"node_modules/@vitos-pizza/settings-preset/extensions",
 			"node_modules/@vitos-pizza/question/extensions",
 			"node_modules/@vitos-pizza/ui-enhancements/extensions",
-			"node_modules/@vitos-pizza/agent-mode/extensions",
 			"node_modules/@vitos-pizza/subagents/extensions",
 			"node_modules/@vitos-pizza/websearch/extensions",
 			"node_modules/@vitos-pizza/session-title/extensions",
-			"node_modules/@vitos-pizza/todoist/extensions",
-			"node_modules/@vitos-pizza/keybindings/extensions"
+			"node_modules/@vitos-pizza/keybindings/extensions",
+			"node_modules/@vitos-pizza/agent-mode/extensions",
+			"node_modules/@vitos-pizza/todoist/extensions"
 		],
 		"skills": [
 			"node_modules/@vitos-pizza/subagents/skills"
@@ -68,5 +71,6 @@
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/xin2017338/vitos-pizza.git"
-	}
+	},
+	"bundleDependencies": []
 }

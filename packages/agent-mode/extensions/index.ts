@@ -19,10 +19,10 @@ import {
 } from "../src/mode-events.ts";
 import {
 	AGENT_MODES,
+	type AgentMode,
 	cycleAgentMode,
 	isAgentMode,
 	MODE_LABELS,
-	type AgentMode,
 } from "../src/modes.ts";
 import {
 	PLAN_INSTRUCTIONS,
@@ -62,16 +62,18 @@ export default function (pi: ExtensionAPI): void {
 		ctx.ui.notify(`Mode: ${mode}`, "info");
 	};
 
-	emitShortcutAction(pi.events, {
-		id: "agent-mode.cycle",
-		description: "Cycle agent mode (agent → plan → execute)",
-		handler: async (shortcutCtx) => {
-			const next = cycleAgentMode(currentMode);
-			await switchMode(shortcutCtx, next);
-		},
-	});
-
 	pi.on("session_start", async (_event, ctx) => {
+		// Register during session_start so @vitos-pizza/keybindings (loads later)
+		// already listens on vitos:shortcuts:register before we emit.
+		emitShortcutAction(pi.events, {
+			id: "agent-mode.cycle",
+			description: "Cycle agent mode (agent → plan → execute)",
+			handler: async (shortcutCtx) => {
+				const next = cycleAgentMode(currentMode);
+				await switchMode(shortcutCtx, next);
+			},
+		});
+
 		const mode = ensureAgentModePersisted(ctx.cwd, { emitReload });
 		publishMode(ctx, mode);
 	});

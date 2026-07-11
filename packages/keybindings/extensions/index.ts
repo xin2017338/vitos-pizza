@@ -64,12 +64,7 @@ export function registerKeybindings(pi: ExtensionAPI): {
 } {
 	const registry = new ActionRegistry();
 	let state: KeybindingsState | null = null;
-
-	const unsubRegister = pi.events.on(SHORTCUTS_REGISTER, (payload) => {
-		if (!isShortcutAction(payload)) return;
-		registry.register(payload);
-	});
-	void unsubRegister;
+	let sessionCwd: string | undefined;
 
 	const rebind = (cwd: string) => {
 		const agentDir = getAgentDir();
@@ -81,8 +76,21 @@ export function registerKeybindings(pi: ExtensionAPI): {
 		return state;
 	};
 
+	const unsubRegister = pi.events.on(SHORTCUTS_REGISTER, (payload) => {
+		if (!isShortcutAction(payload)) return;
+		registry.register(payload);
+		// Rebind if session already started (covers either session_start order).
+		if (sessionCwd) rebind(sessionCwd);
+	});
+	void unsubRegister;
+
 	pi.on("session_start", async (_event, ctx) => {
+		sessionCwd = ctx.cwd;
 		rebind(ctx.cwd);
+	});
+
+	pi.on("session_shutdown", () => {
+		sessionCwd = undefined;
 	});
 
 	pi.registerCommand("vitos-shortcuts", {

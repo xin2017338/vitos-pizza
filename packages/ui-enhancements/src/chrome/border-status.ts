@@ -13,6 +13,14 @@ import {
 	getAgentModeBadge,
 	registerAgentModeBadge,
 } from "./agent-mode-badge.ts";
+import {
+	EXECUTE_START_MESSAGE,
+	type ExecutePromptFocus,
+	formatExecuteActionLine,
+	formatExecuteSeparatorLine,
+	handleExecutePromptKey,
+	injectExecutePromptRows,
+} from "./execute-prompt.ts";
 import { fitBorder } from "./format-border.ts";
 import { attachResizeRecovery } from "./resize-recovery.ts";
 
@@ -29,6 +37,10 @@ function formatContext(ctx: ExtensionContext): string {
 
 function formatThinking(level: string): string {
 	return level === "off" ? "off" : level;
+}
+
+function isExecuteMode(): boolean {
+	return getAgentModeBadge()?.mode === "execute";
 }
 
 class EmptyFooter implements Component {
@@ -127,6 +139,8 @@ export function registerBorderStatusBar(
 		void refreshGit();
 
 		class BorderStatusEditor extends CustomEditor {
+			private executeFocus: ExecutePromptFocus = "action";
+
 			constructor(
 				tui: TUI,
 				theme: EditorTheme,
@@ -136,9 +150,8 @@ export function registerBorderStatusBar(
 				activeTui = tui;
 			}
 
-			render(width: number): string[] {
-				const lines = super.render(width);
-				if (lines.length < 2) return lines;
+			private applyStatusBorders(lines: string[], width: number): void {
+				if (lines.length < 2) return;
 
 				const thm = ctx.ui.theme;
 				const model = ctx.model
@@ -171,7 +184,67 @@ export function registerBorderStatusBar(
 					width,
 					borderColor,
 				);
+			}
+
+			render(width: number): string[] {
+				const execute = isExecuteMode();
+				if (!execute) {
+					this.executeFocus = "action";
+				}
+
+				const wasFocused = this.focused;
+				if (execute && this.executeFocus === "action") {
+					this.focused = false;
+				}
+
+				let lines = super.render(width);
+				this.focused = wasFocused;
+
+				if (lines.length < 2) return lines;
+
+				if (execute) {
+					const thm = ctx.ui.theme;
+					const onAction = this.executeFocus === "action";
+					lines = injectExecutePromptRows(
+						lines,
+						formatExecuteActionLine(onAction, thm, width),
+						formatExecuteSeparatorLine(thm, width),
+					);
+				}
+
+				this.applyStatusBorders(lines, width);
 				return lines;
+			}
+
+			handleInput(data: string): void {
+				if (!isExecuteMode()) {
+					this.executeFocus = "action";
+					super.handleInput(data);
+					return;
+				}
+
+				const result = handleExecutePromptKey(this.executeFocus, data, {
+					editorEmpty: this.isEditorEmpty(),
+					onFirstVisualLine: this.isOnFirstVisualLine(),
+				});
+
+				if (result.type === "setFocus") {
+					this.executeFocus = result.focus;
+					this.focused = result.focus === "editor";
+					this.tui.requestRender();
+					return;
+				}
+
+				if (result.type === "submitStart") {
+					this.setText(EXECUTE_START_MESSAGE);
+					this.submitValue();
+					this.executeFocus = "action";
+					this.focused = false;
+					this.tui.requestRender();
+					return;
+				}
+
+				super.handleInput(data);
 			}
 		}
 

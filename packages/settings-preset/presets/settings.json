@@ -1,0 +1,15 @@
+{
+	"quietStartup": true,
+	"hideThinkingBlock": true,
+	"session": {
+		"autoTitle": {
+			"enabled": true,
+			"fastRules": true,
+			"minCharsForLlm": 4,
+			"maxInputChars": 280,
+			"maxOutputTokens": 16,
+			"timeoutMs": 8000,
+			"maxTitleLength": 20
+		}
+	}
+}

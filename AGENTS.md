@@ -18,7 +18,7 @@ Declare npm pi packages in root `package.json`:
 - `bundledDependencies` — include in the distribution tarball
 - `piBundled` — list read by `sync-pi-manifest.mjs` to merge `node_modules/<pkg>/` paths into the root `pi` manifest
 
-Extension load order: topological sort of `pi.requires`, with `LOCAL_ORDER` tie-break. Default: `permission-system` → `question` → `ui-enhancements` → `agent-mode` → `subagents` → `session-title` → `keybindings`.
+Extension load order: topological sort of `pi.requires`, with `LOCAL_ORDER` tie-break. Default: `permission-system` → `settings-preset` → `question` → `ui-enhancements` → `subagents` → `websearch` → `session-title` → `keybindings` → `agent-mode` → `todoist`. (`agent-mode` requires `keybindings` so shortcut actions register after the keybindings listener is ready.)
 
 ## Agent mode
 
@@ -30,7 +30,7 @@ Vito's Pizzeria uses three centralized modes via **`@vitos-pizza/agent-mode`**:
 | `plan` | `plan` preset | Read-only; scout → planner via subagents + `question` |
 | `execute` | `yolo` preset | Minimal gates; full implementation |
 
-Switch with `/mode [agent|plan|execute]` or **`F6`** (`agent-mode.cycle`). Current mode appears in the ui-enhancements border bar (`· plan` / `· execute`).
+Switch with `/mode [agent|plan|execute]` or **`Ctrl+.`** / **`Alt+M`** (`agent-mode.cycle`). Current mode appears in the ui-enhancements border bar (`· plan` / `· execute`).
 
 ## Keyboard shortcuts
 
@@ -44,10 +44,12 @@ import { emitShortcutAction } from "@vitos-pizza/keybindings/types";
 // session_start — register handler only; keys come from vitos-shortcuts.json
 emitShortcutAction(pi.events, {
   id: "agent-mode.cycle",
-  description: "Cycle agent mode (agent → plan → execute)",
-  handler: async (ctx) => { /* ... */ },
+ description: "Cycle agent mode (agent → plan → execute)",
+ handler: async (ctx) => { /* ... */ },
 });
 ```
+
+Default binding: `ctrl+.` and `alt+m` (see `packages/keybindings/presets/shortcuts.json`). `Ctrl+.` needs a terminal with Kitty / modifyOtherKeys; `Alt+M` works in classic terminals.
 
 Key config (project overrides global overrides preset defaults):
 

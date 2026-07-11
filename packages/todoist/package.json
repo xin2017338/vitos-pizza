@@ -1,6 +1,6 @@
 {
 	"name": "@vitos-pizza/todoist",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "In-memory task management with TUI widget and optional Todoist MCP sync for Vito's Pizzeria Pi distribution",
 	"type": "module",
 	"license": "MIT",

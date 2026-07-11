@@ -14,8 +14,12 @@ export const PLAN_INSTRUCTIONS = `## PLAN MODE
 
 You are in **plan** mode. Do not call write, edit, or bash on the main agent.
 
+**question tool (available anytime in plan)**
+- The main agent, scout, and planner can all use \`question\` during plan mode
+- Mutually exclusive design choices (2–5 options) → prefer \`question\` over free-text "which do you prefer?"
+- Use \`question\` when clarification would help; skip it when context is already enough
+
 **Planning workflow**
-- Mutually exclusive design choices (2–5 options) → always use the \`question\` tool; do not ask in free text
 - Produce an Implementation Plan and wait for user confirmation
 - Do **not** call worker or edit code directly in this mode
 
@@ -39,7 +43,7 @@ When helpful, add a short **Next** footer — Cursor-style suggested actions. Sk
 Example:
 \`\`\`
 **Next**
-- Confirm → \`/mode execute\` (or F6) to implement
+- Confirm → \`/mode execute\` (or Ctrl+. / Alt+M) to implement
 - Say what to change if the scope is off
 \`\`\`
 
@@ -49,7 +53,7 @@ export const PLAN_MODE_MESSAGE = `[PLAN MODE ACTIVE]
 
 You are in plan mode. The main agent must NOT write, edit, or run bash.
 
-1. Mutually exclusive choices → \`question\` tool (not free-text "which do you prefer?")
+1. \`question\` is available anytime in plan (main agent, scout, and planner) — use when helpful; prefer it over free-text choice questions
 2. Scout only if needed; parallel scouts (\`tasks: [...]\`) when exploring independent areas; otherwise go straight to planner
 3. Return the plan and wait; optionally a short **Next** footer (2–3 one-line actions) when helpful
 4. Do NOT call worker or make code changes

@@ -30,9 +30,14 @@ describe("plan-instructions", () => {
 		expect(PLAN_INSTRUCTIONS).toContain("2–3 bullets max");
 		expect(PLAN_INSTRUCTIONS).toContain("question");
 		expect(PLAN_INSTRUCTIONS).toContain("parallel scouts");
+		expect(PLAN_INSTRUCTIONS).toContain("available anytime in plan");
+		expect(PLAN_INSTRUCTIONS).toContain("scout, and planner");
+		expect(PLAN_INSTRUCTIONS).toContain("when clarification would help");
 		expect(PLAN_MODE_MESSAGE).toContain("optionally a short **Next** footer");
 		expect(PLAN_MODE_MESSAGE).toContain("Parallel scouts");
 		expect(PLAN_MODE_MESSAGE).toContain("question");
+		expect(PLAN_MODE_MESSAGE).toContain("available anytime in plan");
+		expect(PLAN_MODE_MESSAGE).toContain("use when helpful");
 	});
 
 	it("defines a clear plan-ended signal for leaving plan mode", () => {

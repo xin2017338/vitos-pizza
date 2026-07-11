@@ -16,4 +16,14 @@ describe("discoverAgents", () => {
 		expect(scout?.source).toBe("builtin");
 		expect(scout?.tools).toContain("read");
 	});
+
+	it("gives scout plan-friendly tools including question", () => {
+		const scout = discoverAgents(process.cwd(), "both").agents.find(
+			(agent) => agent.name === "scout",
+		);
+		expect(scout?.tools).toContain("question");
+		expect(scout?.tools).toContain("web_search");
+		expect(scout?.tools).not.toContain("bash");
+		expect(scout?.tools).not.toContain("write");
+	});
 });

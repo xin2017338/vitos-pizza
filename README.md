@@ -25,10 +25,10 @@ npm install -g --ignore-scripts @earendil-works/pi-coding-agent
 
 ```bash
 # npm (recommended)
-pi install npm:@vitos-pizza/vitos-pizza@0.2.0
+pi install npm:@vitos-pizza/vitos-pizza@0.3.0
 
 # git (pinned tag)
-pi install git:github.com/xin2017338/vitos-pizza@v0.2.0
+pi install git:github.com/xin2017338/vitos-pizza@v0.3.0
 ```
 
 From source:
@@ -148,7 +148,7 @@ Built-in **@vitos-pizza/permission-system** enforces allow / ask / deny on tools
 /mode plan                    # or agent | execute
 ```
 
-Or press **`F6`** to cycle agent → plan → execute. Use `/vitos-shortcuts` to view bindings.
+Or press **`Ctrl+.`** or **`Alt+M`** to cycle agent → plan → execute. Use `/vitos-shortcuts` to view bindings.
 
 | Mode | Permissions | Behavior |
 |------|-------------|----------|

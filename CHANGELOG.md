@@ -2,6 +2,19 @@
 
 All notable changes to vitos-pizza are documented here.
 
+## [0.3.0] - 2026-07-11
+
+### Added
+
+- **Execute-mode prompt UI** — bordered editor shows `▶ 开始实现` + free input (status bar preserved)
+- **`@vitos-pizza/settings-preset`** — seeds default Pi settings on first session when none exist
+- Mode cycle bindings: **`Ctrl+.`** and **`Alt+M`** (`agent-mode.cycle`)
+
+### Changed
+
+- Shortcut registration: actions register on `session_start` so keybindings can bind them reliably
+- Plan mode: main agent / scout / planner can use `question` when helpful; scout tools aligned to plan-friendly set (no bash/write)
+
 ## [0.2.0] - 2026-07-11
 
 ### Added

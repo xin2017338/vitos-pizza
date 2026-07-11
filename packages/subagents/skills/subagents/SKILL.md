@@ -9,15 +9,15 @@ Use the `subagent` tool to delegate work to focused child agents with isolated c
 
 ## Agent modes
 
-Vito's Pizzeria uses three modes via `/mode` or `F6`:
+Vito's Pizzeria uses three modes via `/mode` or `Ctrl+.` / `Alt+M`:
 
 | Mode | When to use |
 |------|-------------|
 | **agent** | Default balanced work |
-| **plan** | Read-only planning — planner (+ optional scout), `question` for clarification; optional short **Next** footer |
+| **plan** | Read-only planning — planner (+ optional scout); `question` available anytime when helpful; optional short **Next** footer |
 | **execute** | Full implementation after plan is approved |
 
-In **plan** mode the main agent cannot write/edit/bash. Delegate with subagents. Scout is optional — use it only when codebase recon is needed; otherwise call planner directly. When recon spans independent areas, run multiple scouts in parallel (`tasks: [...]`) then planner:
+In **plan** mode the main agent cannot write/edit/bash. Delegate with subagents. Scout is optional — use it only when codebase recon is needed; otherwise call planner directly. When recon spans independent areas, run multiple scouts in parallel (`tasks: [...]`) then planner. The main agent, scout, and planner can all use `question` during plan when clarification would help (not required if context is enough):
 
 ```
 [optional scout(s) →] planner → (user confirms) → switch to execute → worker
@@ -27,7 +27,7 @@ In **plan** mode the main agent cannot write/edit/bash. Delegate with subagents.
 
 | Agent | Use when |
 |-------|----------|
-| `scout` | Fast codebase recon; returns compressed context |
+| `scout` | Fast codebase recon; returns compressed context; may use `question` when recon needs clarification |
 | `planner` | Turn context + requirements into an implementation plan |
 | `worker` | Execute an approved plan with narrow, correct edits |
 | `title` | Generate short session titles (used by `@vitos-pizza/session-title`) |
