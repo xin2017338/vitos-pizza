@@ -1,0 +1,16 @@
+{
+	"defaultBackend": "auto",
+	"reader": "jina",
+	"backends": {
+		"exa_mcp": { "enabled": true },
+		"firecrawl": { "enabled": true },
+		"tavily": {
+			"enabled": true,
+			"apiKey": "TAVILY_API_KEY"
+		},
+		"brave": {
+			"enabled": true,
+			"apiKey": "BRAVE_API_KEY"
+		}
+	}
+}

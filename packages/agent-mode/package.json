@@ -1,0 +1,31 @@
+{
+	"name": "@vitos-pizza/agent-mode",
+	"version": "0.1.0",
+	"description": "Centralized agent / plan / execute mode switching for Vito's Pizzeria",
+	"type": "module",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"typecheck": "tsc --noEmit",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write ."
+	},
+	"dependencies": {
+		"@vitos-pizza/keybindings": "file:../keybindings",
+		"@vitos-pizza/permission-system": "file:../permission-system"
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-coding-agent": "*"
+	},
+	"pi": {
+		"requires": [
+			"@vitos-pizza/permission-system"
+		]
+	},
+	"devDependencies": {
+		"@earendil-works/pi-coding-agent": "*",
+		"vitest": "^3.2.4"
+	}
+}

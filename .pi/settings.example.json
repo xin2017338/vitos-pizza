@@ -1,0 +1,20 @@
+{
+	"packages": ["."],
+
+	"quietStartup": true,
+
+	"session": {
+		"autoTitle": {
+			"enabled": true,
+			"model": "google/gemini-2.5-flash",
+			"minCharsForLlm": 4,
+			"fastRules": true,
+			"maxInputChars": 280,
+			"maxOutputTokens": 16,
+			"timeoutMs": 8000,
+			"maxTitleLength": 20
+		}
+	}
+}
+
+

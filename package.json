@@ -1,0 +1,67 @@
+{
+	"name": "@vitos-pizza/vitos-pizza",
+	"version": "0.1.0",
+	"private": true,
+	"description": "Vito's Pizzeria — a Pi distribution (Garfield-approved)",
+	"type": "module",
+	"license": "MIT",
+	"keywords": [
+		"pi-package",
+		"pi",
+		"vitos-pizza"
+	],
+	"workspaces": [
+		"packages/*"
+	],
+	"scripts": {
+		"sync": "node scripts/sync-pi-manifest.mjs",
+		"postinstall": "node scripts/sync-pi-manifest.mjs",
+		"typecheck": "npm run typecheck --workspaces --if-present",
+		"test": "npm run test --workspaces --if-present",
+		"lint": "npm run lint --workspaces --if-present",
+		"lint:fix": "npm run lint:fix --workspaces --if-present",
+		"install:pi": "pi install .",
+		"install:pi:local": "pi install -l .",
+		"try:pi": "pi -e .",
+		"prepack": "node scripts/prepare-publish.mjs prepack",
+		"postpack": "node scripts/prepare-publish.mjs postpack"
+	},
+	"engines": {
+		"node": ">=22.19.0"
+	},
+	"devDependencies": {
+		"@biomejs/biome": "^2.4.14",
+		"typescript": "^5.8.0"
+	},
+	"dependencies": {
+		"@vitos-pizza/agent-mode": "file:packages/agent-mode",
+		"@vitos-pizza/keybindings": "file:packages/keybindings",
+		"@vitos-pizza/permission-system": "file:packages/permission-system",
+		"@vitos-pizza/question": "file:packages/question",
+		"@vitos-pizza/session-title": "file:packages/session-title",
+		"@vitos-pizza/subagents": "file:packages/subagents",
+		"@vitos-pizza/ui-enhancements": "file:packages/ui-enhancements",
+		"@vitos-pizza/websearch": "file:packages/websearch"
+	},
+	"bundledDependencies": [],
+	"piBundled": [],
+	"pi": {
+		"extensions": [
+			"node_modules/@vitos-pizza/permission-system/extensions",
+			"node_modules/@vitos-pizza/question/extensions",
+			"node_modules/@vitos-pizza/ui-enhancements/extensions",
+			"node_modules/@vitos-pizza/agent-mode/extensions",
+			"node_modules/@vitos-pizza/subagents/extensions",
+			"node_modules/@vitos-pizza/websearch/extensions",
+			"node_modules/@vitos-pizza/session-title/extensions",
+			"node_modules/@vitos-pizza/keybindings/extensions"
+		],
+		"skills": [
+			"node_modules/@vitos-pizza/subagents/skills"
+		]
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/xin2017338/vitos-pizza.git"
+	}
+}

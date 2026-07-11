@@ -1,0 +1,39 @@
+{
+	"yoloMode": false,
+	"debug": false,
+	"agentMode": "agent",
+	"permission": {
+		"*": "allow",
+		"read": "allow",
+		"grep": "allow",
+		"find": "allow",
+		"ls": "allow",
+		"web_search": "ask",
+		"web_read": "ask",
+		"path": {
+			"*": "allow",
+			"*.env": "deny",
+			"*.env.*": "deny",
+			"*.env.example": "allow",
+			"~/.ssh/*": "deny"
+		},
+		"bash": {
+			"*": "ask",
+			"git status": "allow",
+			"git status *": "allow",
+			"git diff": "allow",
+			"git diff *": "allow",
+			"git log": "allow",
+			"git log *": "allow",
+			"ls": "allow",
+			"ls *": "allow",
+			"npm test": "allow",
+			"npm test *": "allow",
+			"npm run typecheck": "allow",
+			"npm run lint": "allow",
+			"rm -rf *": "deny",
+			"sudo *": "ask"
+		},
+		"external_directory": "ask"
+	}
+}

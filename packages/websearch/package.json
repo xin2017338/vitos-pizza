@@ -1,0 +1,28 @@
+{
+	"name": "@vitos-pizza/websearch",
+	"version": "0.1.0",
+	"description": "Web search and URL reading for Vito's Pizzeria Pi distribution",
+	"type": "module",
+	"license": "MIT",
+	"private": true,
+	"scripts": {
+		"test": "vitest run",
+		"test:watch": "vitest",
+		"typecheck": "tsc --noEmit",
+		"lint": "biome check .",
+		"lint:fix": "biome check --write ."
+	},
+	"peerDependencies": {
+		"@earendil-works/pi-agent-core": "*",
+		"@earendil-works/pi-ai": "*",
+		"@earendil-works/pi-coding-agent": "*",
+		"@earendil-works/pi-tui": "*",
+		"typebox": "*"
+	},
+	"devDependencies": {
+		"@earendil-works/pi-ai": "*",
+		"@earendil-works/pi-coding-agent": "*",
+		"typebox": "*",
+		"vitest": "^3.2.4"
+	}
+}

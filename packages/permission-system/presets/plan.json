@@ -1,0 +1,25 @@
+{
+	"permission": {
+		"*": "deny",
+		"read": "allow",
+		"grep": "allow",
+		"find": "allow",
+		"ls": "allow",
+		"question": "allow",
+		"subagent": "allow",
+		"wait": "allow",
+		"web_search": "ask",
+		"web_read": "ask",
+		"bash": "deny",
+		"write": "deny",
+		"edit": "deny",
+		"skill": {
+			"*": "allow"
+		},
+		"path": {
+			"*": "allow",
+			"*.env": "deny",
+			"*.env.*": "deny"
+		}
+	}
+}

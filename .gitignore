@@ -1,0 +1,11 @@
+node_modules/
+dist/
+*.tgz
+.DS_Store
+.pi-init.md
+.env
+.env.*
+.pi/settings.json
+.publish-backup/
+nul
+
