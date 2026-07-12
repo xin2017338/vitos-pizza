@@ -4,6 +4,24 @@ All notable changes to vitos-pizza are documented here.
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-07-12
+
+### Added
+
+- **Multi-select questions** — `question` tool `selectType: "multi"` (Space toggle, Enter submit)
+- **Multi-question tabs** — `questions: [...]` for tabbed prompts (Tab/←→ switch; per-tab single or multi)
+
+### Changed
+
+- **Subagent hypa-only reads** — scout / planner / worker drop builtin `read`/`grep`/`find`/`ls`; exploration uses `hypa_*` only (`bash`/`edit`/`write` unchanged)
+- Plan mode footer: **Worth considering** (gaps/adjacent capabilities) replaces **Next** (no mode-switch verbs)
+- Subagent question forwarding: subprocess children use **file channel only** (skip in-process RPC)
+
+### Fixed
+
+- **Subagent question false cancel** — child no-UI RPC no longer replies `cancelled`; parent TUI receives forwarded prompts
+- **Resize recovery** — after Windows/Cursor reports `columns`/`rows` as 0 (or the border TUI is not ready yet), retry invalidate+full redraw for up to 1s so the UI recovers when size settles without another resize event
+
 ## [0.4.0] - 2026-07-11
 
 ### Added
@@ -50,7 +68,7 @@ All notable changes to vitos-pizza are documented here.
 
 - **`@vitos-pizza/todoist`** — in-memory task list with TUI widget, `/todo` command, and LLM tools (`todo_add` / `todo_update` / `todo_complete` / `todo_delete`)
 - Terminal **resize recovery** in ui-enhancements — debounce + full redraw after resize (fixes blank/corrupt TUI on Windows)
-- Plan-mode **Next** footer guidance and optional scout (skip recon when context is enough; parallel scouts for independent areas)
+- Plan-mode **Worth considering** footer (gaps/adjacent capabilities; not next-steps) and optional scout (skip recon when context is enough; parallel scouts for independent areas)
 
 ### Changed
 
@@ -70,15 +88,13 @@ All notable changes to vitos-pizza are documented here.
 - Pi distribution layout: repo root as single install entry
 - `scripts/sync-pi-manifest.mjs` module assembler
 - Original logo at `assets/logo.svg`
+- Built-in modules: agent-mode, question, session-title, permission-system, subagents, keybindings, ui-enhancements, websearch
+- Agent modes: `agent` / `plan` / `execute` with `/mode` and cycle shortcuts
+- Structured `question` tool with subagent parent-session forwarding
+- Session auto-title from first meaningful user message
 
-### Removed
+### Acknowledgments
 
-- Nested `packages/xin-pi` aggregator
-- `@xin-pi/core`, template scaffold, postinstall symlink hack
-
-### Publishing
-
-- GitHub Actions publishes `@vitos-pizza/vitos-pizza` via **npm Trusted Publishing (OIDC)** — no long-lived `NPM_TOKEN`
-- Workflow: `.github/workflows/publish.yml` (triggers on `v*` tags / `workflow_dispatch`)
-- `scripts/prepare-publish.mjs` rewrites `file:` workspace deps for the npm tarball
-- First package version must be published once manually (or as a stub) before Trusted Publisher can be configured on npmjs.com
+- [Pi](https://pi.dev/) / [@earendil-works/pi-coding-agent](https://www.npmjs.com/package/@earendil-works/pi-coding-agent)
+- [@gotgenes/pi-permission-system](https://www.npmjs.com/package/@gotgenes/pi-permission-system)
+- Pi official `question` and subagent examples

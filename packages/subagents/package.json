@@ -1,6 +1,6 @@
 {
 	"name": "@vitos-pizza/subagents",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"description": "Subagent delegation for Vito's Pizzeria Pi distribution",
 	"type": "module",
 	"license": "MIT",

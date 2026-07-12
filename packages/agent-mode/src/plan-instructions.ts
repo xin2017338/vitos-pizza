@@ -28,26 +28,33 @@ This supersedes conflicting skill or prior guidance about implementing code or c
 
 **Exploration**
 - Scout is optional — only for unfamiliar or multi-file recon. Parallel scouts via \`subagent({ tasks: [...] })\` for independent areas, then planner.
-- Prefer \`hypa_read\` / \`hypa_grep\` / \`hypa_find\` / \`hypa_ls\` when available; fall back to read/grep/find/ls.
+- Scout/planner use \`hypa_read\` / \`hypa_grep\` / \`hypa_find\` / \`hypa_ls\` only. Main session: prefer hypa_*; fall back to read/grep/find/ls if needed.
 - Web tools only for current external facts outside the repo.
 
 **Delegation**
 - Enough context → \`subagent({ agent: "planner", task })\`
 - Need recon → \`subagent({ chain: [scout, planner] })\`
 
-**Optional Next footer** (2–3 one-line reply verbs) when the next step is not obvious:
+**Optional open-questions footer** (2–4 one-line prompts) only when the plan may miss scope or adjacent capabilities the user has not clarified. Soft guidance — not next-steps, not mode-switching:
 
 \`\`\`
-**Next**
-- Confirm → \`/mode execute\` (or Ctrl+. / Alt+M)
-- Say what to change if scope is off
-\`\`\``;
+**Worth considering**
+- <gap or adjacent capability the user may not have decided yet>?
+- <in/out of scope this round>?
+\`\`\`
+
+Rules:
+- Ask about omissions, edge cases, related features, or "do you also need X?"
+- Do NOT list mode-switching or how-to-proceed verbs (e.g. \`/mode execute\`, Ctrl+.)
+- Do NOT restate the plan as todos
+- Prefer \`question\` for mutually exclusive choices; use this footer for soft, optional prompts
+- Skip the footer when scope is already clear`;
 
 export const PLAN_MODE_MESSAGE = `[PLAN MODE ACTIVE]
 
 Read-only planning. No write/edit/bash/worker.
 Clarify with \`question\` when needed. Scout only if recon is required; otherwise planner.
-Prefer hypa_* read tools when available. Return the plan and wait; optionally a short **Next** footer.`;
+Prefer hypa_* read tools when available. Return the plan and wait; optionally a short **Worth considering** footer for gaps/adjacent capabilities.`;
 
 export const PLAN_MODE_ENDED_MESSAGE = `[PLAN MODE ENDED]
 

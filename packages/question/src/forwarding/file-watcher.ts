@@ -11,6 +11,7 @@ import { join } from "node:path";
 import type {
 	ForwardedQuestionRequest,
 	ForwardedQuestionResponse,
+	MultiQuestionParams,
 	QuestionParams,
 } from "../types.ts";
 import { getQuestionForwardingRoot } from "./forwarder.ts";
@@ -21,7 +22,9 @@ export function startQuestionFileWatcher(options: {
 	agentDir: string;
 	sessionId: string;
 	responderSessionId: string;
-	showQuestion: (params: QuestionParams) => Promise<ForwardedQuestionResponse>;
+	showQuestion: (
+		params: QuestionParams | MultiQuestionParams,
+	) => Promise<ForwardedQuestionResponse>;
 	pollIntervalMs?: number;
 }): () => void {
 	const forwardingRoot = getQuestionForwardingRoot(
@@ -62,16 +65,43 @@ export function startQuestionFileWatcher(options: {
 				readFileSync(processingPath, "utf8"),
 			) as ForwardedQuestionRequest;
 
-			const response = await options.showQuestion({
-				question: request.question,
-				options: request.options,
-			});
-
-			writeFileSync(
-				join(responsesDir, `${requestId}.json`),
-				JSON.stringify(response),
-				"utf8",
-			);
+			// Determine single vs multi
+			if (request.questions && request.questions.length > 0) {
+				const response = await options.showQuestion({
+					questions: request.questions,
+				});
+				writeFileSync(
+					join(responsesDir, `${requestId}.json`),
+					JSON.stringify(response),
+					"utf8",
+				);
+			} else if (request.question !== undefined && request.options) {
+				const response = await options.showQuestion({
+					question: request.question,
+					options: request.options,
+					selectType: request.selectType,
+				});
+				writeFileSync(
+					join(responsesDir, `${requestId}.json`),
+					JSON.stringify(response),
+					"utf8",
+				);
+			} else {
+				// Unknown format — write failure
+				const failure: ForwardedQuestionResponse = {
+					question: "",
+					options: [],
+					answer: null,
+					cancelled: true,
+					responderSessionId: options.responderSessionId,
+					respondedAt: Date.now(),
+				};
+				writeFileSync(
+					join(responsesDir, `${requestId}.json`),
+					JSON.stringify(failure),
+					"utf8",
+				);
+			}
 		} catch {
 			const failure: ForwardedQuestionResponse = {
 				question: "",

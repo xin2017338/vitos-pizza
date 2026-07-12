@@ -29,16 +29,19 @@ describe("plan-instructions", () => {
 		expect(PLAN_MODE_TOOLS).not.toContain("hypa_shell");
 	});
 
-	it("authoritative system instructions cover hard rules and optional Next", () => {
+	it("authoritative system instructions cover hard rules and open-questions footer", () => {
 		expect(PLAN_INSTRUCTIONS).toMatch(/supersedes/i);
 		expect(PLAN_INSTRUCTIONS).toContain("worker");
 		expect(PLAN_INSTRUCTIONS).toMatch(/no write/i);
 		expect(PLAN_INSTRUCTIONS).toContain("question");
 		expect(PLAN_INSTRUCTIONS).toMatch(/Scout is optional/i);
 		expect(PLAN_INSTRUCTIONS).toContain("hypa_read");
-		expect(PLAN_INSTRUCTIONS).toContain("**Next**");
-		expect(PLAN_INSTRUCTIONS).toContain("2–3");
+		expect(PLAN_INSTRUCTIONS).toContain("**Worth considering**");
+		expect(PLAN_INSTRUCTIONS).toContain("2–4");
+		expect(PLAN_INSTRUCTIONS).toMatch(/gaps|adjacent/i);
 		expect(PLAN_INSTRUCTIONS).toContain("/mode execute");
+		expect(PLAN_INSTRUCTIONS).not.toContain("**Next**");
+		expect(PLAN_INSTRUCTIONS).not.toContain("Confirm →");
 	});
 
 	it("sticky reminder is short and forbids implementation", () => {
@@ -47,7 +50,9 @@ describe("plan-instructions", () => {
 		expect(PLAN_MODE_MESSAGE).toContain("worker");
 		expect(PLAN_MODE_MESSAGE).toContain("question");
 		expect(PLAN_MODE_MESSAGE).toContain("hypa_*");
-		expect(PLAN_MODE_MESSAGE).toContain("**Next**");
+		expect(PLAN_MODE_MESSAGE).toContain("**Worth considering**");
+		expect(PLAN_MODE_MESSAGE).toMatch(/gaps|adjacent/i);
+		expect(PLAN_MODE_MESSAGE).not.toContain("**Next**");
 		expect(PLAN_MODE_MESSAGE).not.toContain("```json");
 	});
 

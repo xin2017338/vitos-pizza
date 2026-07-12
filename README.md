@@ -16,7 +16,7 @@ Inspired by [Vito's Pizzeria](https://garfield.fandom.com/wiki/Vito_Cappelletti)
 
 ![vitos-pizza architecture](./assets/architecture.png)
 
-Typical flow: **plan** → optional **scout** → **planner** → confirm → **execute** / **worker**. Shell output is compressed via Hypa bash rewrite; prefer `hypa_*` read tools when exploring.
+Typical flow: **plan** → optional **scout** → **planner** → confirm → **execute** / **worker**. Shell output is compressed via Hypa bash rewrite; scout/planner/worker explore with `hypa_*` only (main session may still use builtin reads).
 
 | Capability | Module | What you get |
 |------------|--------|--------------|

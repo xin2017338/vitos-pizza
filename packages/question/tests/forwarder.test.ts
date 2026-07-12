@@ -9,10 +9,11 @@ import {
 	startQuestionRpcServer,
 } from "../src/forwarding/forwarder.ts";
 
-describe("question forwarding", () => {
-	it("forwards prompts over the event bus", async () => {
-		const handlers = new Map<string, Array<(payload: unknown) => void>>();
-		const events = {
+function createEvents() {
+	const handlers = new Map<string, Array<(payload: unknown) => void>>();
+	return {
+		handlers,
+		events: {
 			emit(channel: string, payload: unknown) {
 				for (const handler of handlers.get(channel) ?? []) {
 					handler(payload);
@@ -29,12 +30,18 @@ describe("question forwarding", () => {
 					);
 				};
 			},
-		};
+		},
+	};
+}
+
+describe("question forwarding — single", () => {
+	it("forwards single prompts over the event bus", async () => {
+		const { events } = createEvents();
 
 		startQuestionRpcServer(events, async (payload) => ({
 			question: payload.question,
-			options: payload.options.map((o) => o.label),
-			answer: payload.options[0]?.label ?? null,
+			options: payload.options?.map((o) => o.label) ?? [],
+			answer: payload.options?.[0]?.label ?? null,
 			wasCustom: false,
 			cancelled: false,
 			responderSessionId: "parent",
@@ -53,6 +60,55 @@ describe("question forwarding", () => {
 		});
 
 		expect(response?.answer).toBe("A");
+	});
+});
+
+describe("question forwarding — multi", () => {
+	it("forwards multi-question prompts over the event bus", async () => {
+		const { events, handlers } = createEvents();
+
+		startQuestionRpcServer(events, async (payload) => ({
+			questions: payload.questions,
+			answers: {
+				q1: { answer: "Microservices", wasCustom: false, index: 1 },
+				q2: { answer: "TypeScript", wasCustom: false, index: 2 },
+			},
+			cancelled: false,
+			responderSessionId: "parent",
+			respondedAt: Date.now(),
+		}));
+
+		const response = await forwardQuestionPrompt({
+			events,
+			requesterSessionId: "child",
+			targetSessionId: "parent",
+			params: {
+				questions: [
+					{
+						id: "q1",
+						title: "Architecture",
+						question: "Which architecture?",
+						options: [
+							{ label: "Microservices" },
+							{ label: "Monolith" },
+						],
+					},
+					{
+						id: "q2",
+						title: "Language",
+						question: "Which language?",
+						options: [
+							{ label: "TypeScript" },
+							{ label: "Python" },
+						],
+					},
+				],
+			},
+			timeoutMs: 1000,
+		});
+
+		expect(response?.answers?.q1?.answer).toBe("Microservices");
+		expect(response?.answers?.q2?.answer).toBe("TypeScript");
 		expect(handlers.has(QUESTION_RPC_PROMPT)).toBe(true);
 		expect(
 			[...handlers.keys()].some((key) =>

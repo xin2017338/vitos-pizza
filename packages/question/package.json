@@ -1,6 +1,6 @@
 {
 	"name": "@vitos-pizza/question",
-	"version": "0.4.0",
+	"version": "0.4.1",
 	"description": "Structured ask-user question tool for Vito's Pizzeria Pi distribution",
 	"type": "module",
 	"license": "MIT",
