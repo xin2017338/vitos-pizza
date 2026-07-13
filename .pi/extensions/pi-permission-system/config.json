@@ -1,9 +1,9 @@
 {
 	"yoloMode": false,
 	"debug": false,
-	"agentMode": "plan",
+	"agentMode": "agent",
 	"permission": {
-		"*": "deny",
+		"*": "allow",
 		"read": "allow",
 		"grep": "allow",
 		"find": "allow",
@@ -12,23 +12,36 @@
 		"hypa_grep": "allow",
 		"hypa_find": "allow",
 		"hypa_ls": "allow",
-		"question": "allow",
-		"subagent": "allow",
-		"wait": "allow",
+		"hypa_shell": "ask",
+		"hypa_mcp_proxy": "deny",
 		"web_search": "ask",
 		"web_read": "ask",
-		"bash": "deny",
-		"hypa_shell": "deny",
-		"hypa_mcp_proxy": "deny",
-		"write": "deny",
-		"edit": "deny",
-		"skill": {
-			"*": "allow"
-		},
 		"path": {
 			"*": "allow",
 			"*.env": "deny",
-			"*.env.*": "deny"
-		}
+			"*.env.*": "deny",
+			"*.env.example": "allow",
+			"~/.ssh/*": "deny"
+		},
+		"bash": {
+			"*": "ask",
+			"git status": "allow",
+			"git status *": "allow",
+			"git diff": "allow",
+			"git diff *": "allow",
+			"git log": "allow",
+			"git log *": "allow",
+			"ls": "allow",
+			"ls *": "allow",
+			"npm test": "allow",
+			"npm test *": "allow",
+			"npm run typecheck": "allow",
+			"npm run lint": "allow",
+			"hypa *": "ask",
+			"hypa -c *": "ask",
+			"rm -rf *": "deny",
+			"sudo *": "ask"
+		},
+		"external_directory": "ask"
 	}
 }

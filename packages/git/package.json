@@ -1,6 +1,6 @@
 {
 	"name": "@vitos-pizza/git",
-	"version": "0.4.1",
+	"version": "0.4.2",
 	"description": "Quick git commit+push via /cp and /bcp for Vito's Pizzeria",
 	"type": "module",
 	"license": "MIT",

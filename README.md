@@ -48,10 +48,10 @@ Context compression uses bundled [Hypa](https://github.com/Hypabolic/Hypa) (`@hy
 
 ```bash
 # npm (recommended)
-pi install npm:@vitos-pizza/vitos-pizza@0.4.0
+pi install npm:@vitos-pizza/vitos-pizza@0.4.2
 
 # git (pinned tag)
-pi install git:github.com/xin2017338/vitos-pizza@v0.4.0
+pi install git:github.com/xin2017338/vitos-pizza@v0.4.2
 ```
 
 From source:

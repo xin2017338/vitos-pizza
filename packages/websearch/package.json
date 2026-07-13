@@ -1,6 +1,6 @@
 {
 	"name": "@vitos-pizza/websearch",
-	"version": "0.4.1",
+	"version": "0.4.2",
 	"description": "Web search and URL reading for Vito's Pizzeria Pi distribution",
 	"type": "module",
 	"license": "MIT",

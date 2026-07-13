@@ -4,6 +4,18 @@ All notable changes to vitos-pizza are documented here.
 
 ## [Unreleased]
 
+## [0.4.2] - 2026-07-13
+
+### Added
+
+- **`@vitos-pizza/git`** — `/cp` (AI commit message → confirm → commit + push) and `/bcp` (AI branch + message → confirm → new branch → commit + `push -u`)
+- Internal subagents `commit` agent (hidden from public listings) for commit/branch text
+
+### Changed
+
+- **Session-level agent modes** — switching `agent` / `plan` / `execute` applies permission presets in-session (no longer rewriting project permission config on disk)
+- Todoist tools return explicit `#id` in results and guide the model to use those IDs (not guessed indices)
+
 ## [0.4.1] - 2026-07-12
 
 ### Added
