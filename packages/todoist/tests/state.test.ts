@@ -120,6 +120,80 @@ describe("TodoStore", () => {
 		expect(store.list({ status: "all" })[0]!.text).toBe("Replayed task");
 	});
 
+	it("restoreFromHistory uses only the last snapshot (empty clears prior tasks)", () => {
+		const store = new TodoStore();
+		const ts = new Date().toISOString();
+		store.restoreFromHistory([
+			{
+				toolName: "todo_add",
+				input: { text: "Old work" },
+				result: {
+					details: {
+						todos: [
+							{
+								id: "1",
+								text: "Old work",
+								status: "pending" as const,
+								priority: 3 as const,
+								createdAt: ts,
+								updatedAt: ts,
+							},
+						],
+						totalCount: 1,
+						doneCount: 0,
+						todoistConnected: false,
+					},
+				},
+			},
+			{
+				toolName: "todo_update",
+				input: { id: "1", status: "done" },
+				result: {
+					details: {
+						todos: [],
+						totalCount: 0,
+						doneCount: 0,
+						todoistConnected: false,
+					},
+				},
+			},
+		]);
+		expect(store.list({ status: "all" })).toHaveLength(0);
+		expect(store.getSnapshot().totalCount).toBe(0);
+
+		const next = store.add("Fresh work");
+		expect(next.id).toBe("1");
+	});
+
+	it("restoreFromHistory advances nextId from the last snapshot ids", () => {
+		const store = new TodoStore();
+		const ts = new Date().toISOString();
+		store.restoreFromHistory([
+			{
+				toolName: "todo_add",
+				input: { text: "Keep" },
+				result: {
+					details: {
+						todos: [
+							{
+								id: "3",
+								text: "Keep",
+								status: "pending" as const,
+								priority: 3 as const,
+								createdAt: ts,
+								updatedAt: ts,
+							},
+						],
+						totalCount: 1,
+						doneCount: 0,
+						todoistConnected: false,
+					},
+				},
+			},
+		]);
+		expect(store.add("Next").id).toBe("4");
+	});
+
 	it("should fire onChange callback", () => {
 		let callCount = 0;
 		const store = new TodoStore({ onChange: () => { callCount++; } });

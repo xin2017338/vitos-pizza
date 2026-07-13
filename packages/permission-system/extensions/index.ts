@@ -24,7 +24,12 @@ import {
 	registerSkillInputGate,
 	registerToolCallGate,
 } from "../src/handlers/tool-call-gate.ts";
-import { PERMISSION_RELOAD_CONFIG_EVENT } from "../src/mode-api.ts";
+import {
+	loadPermissionPreset,
+	PERMISSION_APPLY_PRESET_EVENT,
+	PERMISSION_RELOAD_CONFIG_EVENT,
+	type PermissionApplyPresetPayload,
+} from "../src/mode-api.ts";
 import { PermissionSession } from "../src/permission-session.ts";
 import { loadConfigFile, saveConfigFile } from "../src/policy-loader.ts";
 import {
@@ -32,6 +37,7 @@ import {
 	emitPermissionEvent,
 	setPermissionsService,
 } from "../src/service.ts";
+import type { ExtensionConfig } from "../src/types.ts";
 import {
 	buildApprovalSummary,
 	buildApprovalTitle,
@@ -129,9 +135,28 @@ export default function (pi: ExtensionAPI) {
 		}
 	});
 
+	const unsubApplyPreset = pi.events.on(
+		PERMISSION_APPLY_PRESET_EVENT,
+		(payload: unknown) => {
+			const { preset, agentMode } = (payload ??
+				{}) as PermissionApplyPresetPayload;
+			if (preset !== "default" && preset !== "plan" && preset !== "yolo") {
+				return;
+			}
+			const presetConfig = loadPermissionPreset(preset);
+			const overlay: ExtensionConfig = {
+				yoloMode: presetConfig.yoloMode ?? false,
+				permission: presetConfig.permission ?? { "*": "ask" },
+				...(agentMode ? { agentMode } : {}),
+			};
+			session.setSessionOverlay(overlay);
+		},
+	);
+
 	pi.on("session_start", async (_event, ctx) => {
 		activeUiContext = ctx;
 		ensureDefaultConfig(ctx.cwd, agentDir);
+		session.clearSessionOverlay();
 		session.refresh(ctx);
 		session.sessionApprovals.clear();
 		emitPermissionEvent(pi, "permissions:ready", { cwd: ctx.cwd });
@@ -139,6 +164,7 @@ export default function (pi: ExtensionAPI) {
 
 	pi.on("session_shutdown", (_event, _ctx) => {
 		activeUiContext = null;
+		session.clearSessionOverlay();
 		session.sessionApprovals.clear();
 	});
 
@@ -157,6 +183,7 @@ export default function (pi: ExtensionAPI) {
 	void unsubLifecycle;
 	void unsubRpc;
 	void unsubReload;
+	void unsubApplyPreset;
 	void loadConfigFile;
 	void yoloApi;
 }

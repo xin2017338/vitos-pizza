@@ -2,6 +2,7 @@ import { StringEnum } from "@earendil-works/pi-ai";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import type { TodoStore } from "./state.ts";
+import type { TodoItem } from "./types.ts";
 
 /** Debug-visible result — short text in transcript; full snapshot in details for replay */
 function silentResult(
@@ -14,12 +15,27 @@ function silentResult(
 	};
 }
 
+/** Format a task for tool content so the model can see real IDs. */
+export function formatTodoListLine(todo: TodoItem): string {
+	return `#${todo.id} [${todo.status}] ${todo.text}`;
+}
+
+/** Hint listing active (non-done) task IDs after a failed update. */
+export function formatActiveIdHint(todos: TodoItem[]): string {
+	const active = todos.filter((t) => t.status !== "done");
+	if (active.length === 0) return "no active tasks";
+	return `active: ${active.map((t) => `#${t.id}`).join(", ")}`;
+}
+
 /** Shared complete-vs-delete boundary (Claude Code style). */
 const COMPLETE_VS_DELETE = [
 	"Complete finished work with todo_update status 'done' (shows ☑). Do not use todo_remove to mark work finished.",
 	"When every task in the list is done, the list clears automatically — then start the next multi-step request with fresh todo_add calls.",
 	"Use todo_remove only for cancelled, duplicate, mistaken, or no-longer-relevant tasks.",
 ] as const;
+
+const USE_RETURNED_IDS =
+	"Use the #id returned by todo_add / todo_list — never guess sequential indices (IDs start at 1, not 0)" as const;
 
 export function registerTodoistTools(pi: ExtensionAPI, store: TodoStore): void {
 	pi.registerTool({
@@ -30,6 +46,7 @@ export function registerTodoistTools(pi: ExtensionAPI, store: TodoStore): void {
 		promptGuidelines: [
 			"Use todo_add when you need to create a new task to track",
 			"After a previous list was fully completed (auto-cleared), start the next multi-step request with fresh todo_add calls",
+			USE_RETURNED_IDS,
 			"Priority: 1 (urgent), 2 (high), 3 (normal), 4 (low)",
 			"Project is optional — use it to group related tasks",
 		],
@@ -44,13 +61,16 @@ export function registerTodoistTools(pi: ExtensionAPI, store: TodoStore): void {
 		}),
 		async execute(_toolCallId, params, _signal, _onUpdate, _ctx) {
 			const input = params as { text: string; priority?: number; project?: string };
-			store.add(
+			const item = store.add(
 				input.text,
 				(input.priority ?? 3) as 1 | 2 | 3 | 4,
 				input.project,
 			);
 			const snap = store.getSnapshot();
-			return silentResult(snap, `added: ${input.text} (${snap.totalCount} total)`);
+			return silentResult(
+				snap,
+				`added #${item.id}: ${input.text} (${snap.totalCount} total)`,
+			);
 		},
 	});
 
@@ -61,7 +81,8 @@ export function registerTodoistTools(pi: ExtensionAPI, store: TodoStore): void {
 			"List all tasks in the todo list, optionally filtered by status or project.",
 		promptSnippet: "List tasks from the todo list",
 		promptGuidelines: [
-			"Use todo_list to see current tasks",
+			"Use todo_list to see current tasks and their #id values",
+			USE_RETURNED_IDS,
 			"Filter by 'active' to see only unfinished tasks",
 			"Filter by 'done' to see completed tasks",
 		],
@@ -86,10 +107,12 @@ export function registerTodoistTools(pi: ExtensionAPI, store: TodoStore): void {
 				project: input.project,
 			});
 			const snap = store.getSnapshot();
-			return silentResult(
-				snap,
-				`listed ${listed.length} (filter=${input.filter ?? "all"})`,
-			);
+			const header = `listed ${listed.length} (filter=${input.filter ?? "all"})`;
+			const body =
+				listed.length === 0
+					? header
+					: `${header}\n${listed.map(formatTodoListLine).join("\n")}`;
+			return silentResult(snap, body);
 		},
 	});
 
@@ -101,6 +124,7 @@ export function registerTodoistTools(pi: ExtensionAPI, store: TodoStore): void {
 		promptSnippet: "Update a task in the todo list",
 		promptGuidelines: [
 			"Use todo_update to mark tasks done, change priority, or edit text",
+			USE_RETURNED_IDS,
 			"When work is finished, set status to 'done' immediately — do not batch completions",
 			"Set status to 'in_progress' when starting work on a task (ideally one at a time)",
 			...COMPLETE_VS_DELETE,
@@ -135,9 +159,10 @@ export function registerTodoistTools(pi: ExtensionAPI, store: TodoStore): void {
 				project: input.project,
 			});
 			if (!item) {
+				const snap = store.getSnapshot();
 				return silentResult(
-					{ todos: [], totalCount: 0, doneCount: 0, todoistConnected: false },
-					`update failed: id=${input.id} not found`,
+					snap,
+					`update failed: id=${input.id} not found; ${formatActiveIdHint(snap.todos)}`,
 				);
 			}
 			const snap = store.getSnapshot();
@@ -160,6 +185,7 @@ export function registerTodoistTools(pi: ExtensionAPI, store: TodoStore): void {
 		promptSnippet: "Permanently delete a no-longer-relevant task",
 		promptGuidelines: [
 			...COMPLETE_VS_DELETE,
+			USE_RETURNED_IDS,
 			"Only call todo_remove when the user cancels the task, the plan changed, the item was a duplicate/mistake, or they explicitly ask to delete it",
 		],
 		parameters: Type.Object({

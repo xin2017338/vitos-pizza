@@ -39,13 +39,14 @@ function formatMeta(todo: TodoItem, theme: WidgetTheme, nowMs: number): string {
 
 function formatTodoLine(todo: TodoItem, theme: WidgetTheme, nowMs: number): string {
 	const metaStr = formatMeta(todo, theme, nowMs);
+	const idLabel = `#${todo.id}`;
 	if (todo.status === "in_progress") {
-		return `  ${theme.fg("warning", "✳")} ${theme.fg("text", todo.text)}${metaStr}`;
+		return `  ${theme.fg("warning", "✳")} ${theme.fg("text", `${idLabel} ${todo.text}`)}${metaStr}`;
 	}
 	if (todo.status === "done") {
-		return `  ${theme.fg("muted", "☑")} ${theme.fg("muted", todo.text)}${metaStr}`;
+		return `  ${theme.fg("muted", "☑")} ${theme.fg("muted", `${idLabel} ${todo.text}`)}${metaStr}`;
 	}
-	return `  ${theme.fg("muted", "◻")} ${theme.fg("text", todo.text)}${metaStr}`;
+	return `  ${theme.fg("muted", "◻")} ${theme.fg("text", `${idLabel} ${todo.text}`)}${metaStr}`;
 }
 
 export type TodoWidgetView = {

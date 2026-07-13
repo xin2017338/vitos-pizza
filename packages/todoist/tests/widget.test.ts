@@ -34,7 +34,7 @@ describe("buildTodoWidgetView", () => {
 		expect(view.status).toBeUndefined();
 	});
 
-	it("keeps done tasks visible with a checkmark", () => {
+	it("keeps done tasks visible with a checkmark and #id", () => {
 		const view = buildTodoWidgetView(
 			snapshot([
 				item({ id: "1", text: "Active", status: "pending" }),
@@ -44,12 +44,16 @@ describe("buildTodoWidgetView", () => {
 		);
 
 		expect(view.lines).toBeDefined();
-		expect(view.lines!.some((line) => line.includes("☑") && line.includes("Finished"))).toBe(
-			true,
-		);
-		expect(view.lines!.some((line) => line.includes("◻") && line.includes("Active"))).toBe(
-			true,
-		);
+		expect(
+			view.lines!.some(
+				(line) => line.includes("☑") && line.includes("#2 Finished"),
+			),
+		).toBe(true);
+		expect(
+			view.lines!.some(
+				(line) => line.includes("◻") && line.includes("#1 Active"),
+			),
+		).toBe(true);
 		expect(view.status).toContain("● 1");
 	});
 
@@ -61,10 +65,20 @@ describe("buildTodoWidgetView", () => {
 
 		expect(view.lines).toBeDefined();
 		expect(view.lines![0]).toContain("☑ 1 done");
-		expect(view.lines!.some((line) => line.includes("☑") && line.includes("All done"))).toBe(
-			true,
-		);
+		expect(
+			view.lines!.some(
+				(line) => line.includes("☑") && line.includes("#1 All done"),
+			),
+		).toBe(true);
 		expect(view.status).toContain("☑ 1");
+	});
+
+	it("shows #id on in_progress lines", () => {
+		const view = buildTodoWidgetView(
+			snapshot([item({ id: "7", text: "Working", status: "in_progress" })]),
+			theme,
+		);
+		expect(view.lines!.some((line) => line.includes("#7 Working"))).toBe(true);
 	});
 
 	it("orders in_progress before pending before done", () => {

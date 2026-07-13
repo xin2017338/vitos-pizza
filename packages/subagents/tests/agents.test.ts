@@ -11,13 +11,15 @@ describe("discoverAgents", () => {
 		const { agents, builtinAgentsDir } = discoverAgents(process.cwd(), "both");
 		expect(builtinAgentsDir).toBe(getBuiltinAgentsDir());
 		const names = agents.map((agent) => agent.name).sort();
-		expect(names).toEqual(["planner", "scout", "title", "worker"]);
+		expect(names).toEqual(["commit", "planner", "scout", "title", "worker"]);
 	});
 
 	it("hides the title agent from public listings", () => {
 		const { agents } = discoverAgents(process.cwd(), "both");
 		expect(isPublicAgent("title")).toBe(false);
+		expect(isPublicAgent("commit")).toBe(false);
 		expect(formatAvailableAgents(agents)).not.toContain("title");
+		expect(formatAvailableAgents(agents)).not.toContain("commit");
 		expect(formatAvailableAgents(agents)).toContain("scout");
 	});
 

@@ -109,23 +109,28 @@ export class TodoStore {
 	/**
 	 * Rebuild state from a series of historical tool calls (conversation replay).
 	 * Each entry should have: { toolName, input, result }
+	 * Uses the last entry that includes `details.todos` (including an empty array
+	 * after all-done clear) — does not merge earlier snapshots.
 	 */
 	restoreFromHistory(
 		entries: Array<{ toolName: string; input: Record<string, unknown>; result?: Record<string, unknown> }>,
 	): void {
-		// Clear and reset id counter
 		this.items.clear();
 		nextId = 1;
 
+		let lastTodos: TodoItem[] | undefined;
 		for (const entry of entries) {
 			const details = entry.result?.details as { todos?: TodoItem[] } | undefined;
-			if (!details?.todos) continue;
-			// Use the full snapshot from the last entry — replay forward
-			for (const todo of details.todos) {
-				const idNum = Number.parseInt(todo.id, 10);
-				if (idNum >= nextId) nextId = idNum + 1;
-				this.items.set(todo.id, { ...todo });
-			}
+			if (!details || !Array.isArray(details.todos)) continue;
+			lastTodos = details.todos;
+		}
+
+		if (!lastTodos) return;
+
+		for (const todo of lastTodos) {
+			const idNum = Number.parseInt(todo.id, 10);
+			if (Number.isFinite(idNum) && idNum >= nextId) nextId = idNum + 1;
+			this.items.set(todo.id, { ...todo });
 		}
 	}
 

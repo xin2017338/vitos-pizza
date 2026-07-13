@@ -37,7 +37,7 @@ const THINKING_LEVELS = new Set([
 ]);
 
 /** Internal agents (e.g. session naming) — callable by name, not listed to the main agent. */
-const INTERNAL_AGENT_NAMES = new Set(["title"]);
+const INTERNAL_AGENT_NAMES = new Set(["title", "commit"]);
 
 export function isPublicAgent(name: string): boolean {
 	return !INTERNAL_AGENT_NAMES.has(name);

@@ -23,10 +23,11 @@ Typical flow: **plan** → optional **scout** → **planner** → confirm → **
 | Modes | `@vitos-pizza/agent-mode` | `agent` / `plan` / `execute` — `/mode`, Ctrl+. / Alt+M |
 | Permissions | `@vitos-pizza/permission-system` | allow / ask / deny presets per mode |
 | Context compression | `@hypabolic/pi-hypa` + `@vitos-pizza/hypa` | bash rewrite, `hypa_*` tools, `/hypa` (MCP proxy off) |
-| Subagents | `@vitos-pizza/subagents` | scout · planner · worker (+ title internally) |
+| Subagents | `@vitos-pizza/subagents` | scout · planner · worker (+ title/commit internally) |
 | Structured questions | `@vitos-pizza/question` | `question` tool |
 | Web | `@vitos-pizza/websearch` | `web_search` / `web_read` |
 | Tasks | `@vitos-pizza/todoist` | `/todo` + LLM tools |
+| Git ship | `@vitos-pizza/git` | `/cp` `/bcp` |
 | Session titles | `@vitos-pizza/session-title` | auto-name after first turn |
 | TUI | `@vitos-pizza/ui-enhancements` | border status, execute prompt chrome |
 | Shortcuts | `@vitos-pizza/keybindings` | centralized `vitos-shortcuts.json` |
@@ -95,10 +96,22 @@ vitos-pizza/                 # Pi distribution (install this)
     ├── subagents/           # @vitos-pizza/subagents — scout/planner/worker delegation
     ├── websearch/           # @vitos-pizza/websearch — web_search / web_read tools
     ├── todoist/             # @vitos-pizza/todoist — in-memory task list + TUI widget
+    ├── git/                 # @vitos-pizza/git — /cp /bcp quick commit+push
     └── keybindings/         # @vitos-pizza/keybindings — centralized shortcut bindings
 ```
 
 Built-in modules are wired via `scripts/sync-pi-manifest.mjs` (supports `pi.requires` load order). Third-party Pi packages listed in root `piBundled` (currently `@hypabolic/pi-hypa`) are merged into the same manifest.
+
+## Quick git commit & push
+
+Module `@vitos-pizza/git` ships changes with an AI-written commit message (Pi session only):
+
+| Command | What it does |
+|---------|--------------|
+| `/cp` | Commit message → confirm → commit + push |
+| `/bcp` | Suggest branch + message → confirm → `checkout -b` → commit + `push -u` |
+
+After `pi install .` (or `/reload`), use these from the Pi TUI. Never force-pushes; aborts on empty trees or likely secret paths (e.g. `.env`).
 
 | Path | Role |
 |------|------|
@@ -167,7 +180,7 @@ Built-in **@vitos-pizza/permission-system** enforces allow / ask / deny on tools
 
 ### Agent modes
 
-`@vitos-pizza/agent-mode` provides three project-level modes. Switch with:
+`@vitos-pizza/agent-mode` provides three session-level modes. Switch with:
 
 ```text
 /mode                         # interactive picker
@@ -182,7 +195,7 @@ Or press **`Ctrl+.`** or **`Alt+M`** to cycle agent → plan → execute. Use `/
 | `plan` | `plan` | Read-only — explore without edits or shell; `subagent` / `question` for scout/planner |
 | `execute` | `yolo` | Minimal gates — only blocks `.env`, `~/.ssh`, `rm -rf` |
 
-Current mode is shown in the border status bar (`· plan` / `· execute`). On first session in a project, `agent` + `default` preset is written to `.pi/extensions/pi-permission-system/config.json` if missing. Use `/permission-system` for debug/YOLO runtime toggles. See [config.example.json](.pi/extensions/pi-permission-system/config.example.json).
+Current mode is shown in the border status bar (`· plan` / `· execute`). Mode is per session (new sessions start in `agent`); switching does not rewrite project permission config. On first session in a project, a `default` preset is written to `.pi/extensions/pi-permission-system/config.json` if missing. Use `/permission-system` for debug/YOLO runtime toggles. See [config.example.json](.pi/extensions/pi-permission-system/config.example.json).
 
 Optional subagents settings in [`.pi/settings.example.json`](.pi/settings.example.json) (`subagents.disableThinking`, model overrides, etc.).
 

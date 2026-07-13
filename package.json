@@ -40,6 +40,7 @@
 		"@hypabolic/pi-hypa": "^0.1.10",
 		"typebox": "^1.1.38",
 		"@vitos-pizza/agent-mode": "file:packages/agent-mode",
+		"@vitos-pizza/git": "file:packages/git",
 		"@vitos-pizza/hypa": "file:packages/hypa",
 		"@vitos-pizza/keybindings": "file:packages/keybindings",
 		"@vitos-pizza/permission-system": "file:packages/permission-system",
@@ -70,7 +71,8 @@
 			"node_modules/@vitos-pizza/session-title/extensions",
 			"node_modules/@vitos-pizza/keybindings/extensions",
 			"node_modules/@vitos-pizza/agent-mode/extensions",
-			"node_modules/@vitos-pizza/todoist/extensions"
+			"node_modules/@vitos-pizza/todoist/extensions",
+			"node_modules/@vitos-pizza/git/extensions"
 		],
 		"skills": [
 			"node_modules/@vitos-pizza/subagents/skills"

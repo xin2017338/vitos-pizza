@@ -7,7 +7,7 @@ Inspired by Vito's Pizzeria from Garfield — one brand, one install.
 ## Structure
 
 - **Repo root** — The distribution. `package.json` is the pi-package manifest.
-- **`packages/<module>/`** — Built-in modules (e.g. `@vitos-pizza/agent-mode`, `@vitos-pizza/hypa`, `@vitos-pizza/question`, `@vitos-pizza/session-title`, `@vitos-pizza/permission-system`, `@vitos-pizza/subagents`, `@vitos-pizza/keybindings`). Not installed separately by users.
+- **`packages/<module>/`** — Built-in modules (e.g. `@vitos-pizza/agent-mode`, `@vitos-pizza/hypa`, `@vitos-pizza/question`, `@vitos-pizza/session-title`, `@vitos-pizza/permission-system`, `@vitos-pizza/subagents`, `@vitos-pizza/keybindings`, `@vitos-pizza/git`). Not installed separately by users.
 - **`scripts/sync-pi-manifest.mjs`** — Scans `packages/*`, merges `piBundled` npm packages, and updates root `dependencies` + `pi` manifest. Honors `pi.requires` for extension load order.
 
 ## Bundled third-party Pi packages
@@ -18,11 +18,11 @@ Declare npm pi packages in root `package.json`:
 - `bundledDependencies` — include in the distribution tarball
 - `piBundled` — list read by `sync-pi-manifest.mjs` to merge `node_modules/<pkg>/` paths into the root `pi` manifest
 
-Extension load order: topological sort of `pi.requires`, with `LOCAL_ORDER` tie-break. Default: `permission-system` → `settings-preset` → `hypa` → `question` → `ui-enhancements` → `subagents` → `websearch` → `session-title` → `keybindings` → `agent-mode` → `todoist`. (`agent-mode` requires `keybindings` so shortcut actions register after the keybindings listener is ready.) `piBundled` packages (e.g. `@hypabolic/pi-hypa`) load before local modules.
+Extension load order: topological sort of `pi.requires`, with `LOCAL_ORDER` tie-break. Default: `permission-system` → `settings-preset` → `hypa` → `question` → `ui-enhancements` → `subagents` → `websearch` → `session-title` → `keybindings` → `agent-mode` → `todoist` → `git`. (`agent-mode` requires `keybindings` so shortcut actions register after the keybindings listener is ready.) `piBundled` packages (e.g. `@hypabolic/pi-hypa`) load before local modules.
 
 ## Agent mode
 
-Vito's Pizzeria uses three centralized modes via **`@vitos-pizza/agent-mode`**:
+Vito's Pizzeria uses three **session-level** modes via **`@vitos-pizza/agent-mode`** (new sessions start in `agent`; switching does not rewrite project permission config):
 
 | Mode | Permissions | Behavior |
 |------|-------------|----------|

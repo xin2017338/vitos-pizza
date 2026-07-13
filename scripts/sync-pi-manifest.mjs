@@ -21,6 +21,7 @@ const LOCAL_ORDER = [
 	"keybindings",
 	"agent-mode",
 	"todoist",
+	"git",
 ];
 
 function loadJson(path) {

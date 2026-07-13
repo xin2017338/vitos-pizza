@@ -1,60 +1,28 @@
 import {
-	applyPermissionPreset,
-	loadProjectConfig,
-	PERMISSION_RELOAD_CONFIG_EVENT,
-	saveProjectConfig,
+	PERMISSION_APPLY_PRESET_EVENT,
+	type PermissionApplyPresetPayload,
 } from "@vitos-pizza/permission-system/mode-api";
-import {
-	inferAgentMode,
-	PRESET_BY_MODE,
-	type AgentMode,
-} from "./modes.ts";
+import { type AgentMode, PRESET_BY_MODE } from "./modes.ts";
 
 export interface ApplyAgentModeDeps {
-	emitReload: () => void;
+	emitApplyPreset: (payload: PermissionApplyPresetPayload) => void;
 }
 
 export function applyAgentMode(
-	cwd: string,
 	mode: AgentMode,
-	deps?: ApplyAgentModeDeps,
+	deps: ApplyAgentModeDeps,
 ): AgentMode {
-	const preset = PRESET_BY_MODE[mode];
-	applyPermissionPreset(cwd, preset);
-	const existing = loadProjectConfig(cwd);
-	const next = {
-		...existing,
+	deps.emitApplyPreset({
+		preset: PRESET_BY_MODE[mode],
 		agentMode: mode,
-		yoloMode: false,
-	};
-	saveProjectConfig(cwd, next);
-	deps?.emitReload();
+	});
 	return mode;
 }
 
-export function resolveCurrentAgentMode(cwd: string): AgentMode {
-	const config = loadProjectConfig(cwd);
-	return inferAgentMode(config);
-}
-
-export function ensureAgentModePersisted(
-	cwd: string,
-	deps?: ApplyAgentModeDeps,
-): AgentMode {
-	const config = loadProjectConfig(cwd);
-	const mode = inferAgentMode(config);
-	if (config.agentMode !== mode) {
-		applyAgentMode(cwd, mode, deps);
-		return mode;
-	}
-	deps?.emitReload();
-	return mode;
-}
-
-export function createReloadEmitter(
-	events: { emit: (channel: string, payload: unknown) => void },
-): () => void {
-	return () => {
-		events.emit(PERMISSION_RELOAD_CONFIG_EVENT, {});
+export function createApplyPresetEmitter(events: {
+	emit: (channel: string, payload: unknown) => void;
+}): (payload: PermissionApplyPresetPayload) => void {
+	return (payload) => {
+		events.emit(PERMISSION_APPLY_PRESET_EVENT, payload);
 	};
 }

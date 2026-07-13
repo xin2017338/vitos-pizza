@@ -9,6 +9,13 @@ export type PermissionPresetName = "default" | "plan" | "yolo";
 
 export const PERMISSION_RELOAD_CONFIG_EVENT = "permission-system:reload-config";
 
+export const PERMISSION_APPLY_PRESET_EVENT = "permission-system:apply-preset";
+
+export type PermissionApplyPresetPayload = {
+	preset: PermissionPresetName;
+	agentMode?: "agent" | "plan" | "execute";
+};
+
 const moduleDir = dirname(fileURLToPath(import.meta.url));
 export const PRESETS_DIR = join(moduleDir, "..", "presets");
 
@@ -20,19 +27,22 @@ export function loadProjectConfig(cwd: string): ExtensionConfig {
 	return loadConfigFile(path);
 }
 
-export function saveProjectConfig(
-	cwd: string,
-	config: ExtensionConfig,
-): void {
+export function saveProjectConfig(cwd: string, config: ExtensionConfig): void {
 	saveConfigFile(getProjectConfigPath(cwd), config);
+}
+
+export function loadPermissionPreset(
+	preset: PermissionPresetName,
+): ExtensionConfig {
+	const presetPath = join(PRESETS_DIR, `${preset}.json`);
+	return loadConfigFile(presetPath);
 }
 
 export function applyPermissionPreset(
 	cwd: string,
 	preset: PermissionPresetName,
 ): ExtensionConfig {
-	const presetPath = join(PRESETS_DIR, `${preset}.json`);
-	const presetConfig = loadConfigFile(presetPath);
+	const presetConfig = loadPermissionPreset(preset);
 	const existing = loadProjectConfig(cwd);
 	const next: ExtensionConfig = {
 		...existing,

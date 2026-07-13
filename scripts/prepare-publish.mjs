@@ -10,6 +10,7 @@ const packagesDir = join(root, "packages");
 const BUNDLED_MODULES = [
 	"@hypabolic/pi-hypa",
 	"@vitos-pizza/agent-mode",
+	"@vitos-pizza/git",
 	"@vitos-pizza/hypa",
 	"@vitos-pizza/keybindings",
 	"@vitos-pizza/permission-system",

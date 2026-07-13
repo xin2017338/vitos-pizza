@@ -7,11 +7,7 @@ import type {
 	ExtensionContext,
 } from "@earendil-works/pi-coding-agent";
 import { emitShortcutAction } from "@vitos-pizza/keybindings/types";
-import {
-	applyAgentMode,
-	createReloadEmitter,
-	ensureAgentModePersisted,
-} from "../src/apply-mode.ts";
+import { applyAgentMode, createApplyPresetEmitter } from "../src/apply-mode.ts";
 import {
 	clearAgentModeStatus,
 	emitAgentModeChanged,
@@ -34,7 +30,7 @@ import {
 export default function (pi: ExtensionAPI): void {
 	let currentMode: AgentMode = "agent";
 
-	const emitReload = createReloadEmitter(pi.events);
+	const emitApplyPreset = createApplyPresetEmitter(pi.events);
 
 	const allToolNames = () => pi.getAllTools().map((tool) => tool.name);
 
@@ -46,7 +42,7 @@ export default function (pi: ExtensionAPI): void {
 
 	const switchMode = async (ctx: ExtensionContext, mode: AgentMode) => {
 		const leavingPlan = currentMode === "plan" && mode !== "plan";
-		applyAgentMode(ctx.cwd, mode, { emitReload: emitReload });
+		applyAgentMode(mode, { emitApplyPreset });
 		publishMode(ctx, mode);
 		if (leavingPlan) {
 			const tools = allToolNames();
@@ -74,7 +70,8 @@ export default function (pi: ExtensionAPI): void {
 			},
 		});
 
-		const mode = ensureAgentModePersisted(ctx.cwd, { emitReload });
+		const mode: AgentMode = "agent";
+		applyAgentMode(mode, { emitApplyPreset });
 		publishMode(ctx, mode);
 	});
 
